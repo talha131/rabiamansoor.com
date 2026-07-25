@@ -1,0 +1,341 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Contours from '../components/Contours.astro';
+import StatTile from '../components/StatTile.astro';
+import { SCHOLAR_URL, ORCID_URL, SITE_NAME } from '../lib/site';
+
+const facets = [
+  {
+    role: 'The Scholar',
+    body: 'Current PhD research in the Social Sciences investigates the active role of narrative discourse in shaping global power — focused on Cold War and post-9/11 literature and spy thrillers, building on an MPhil in interdisciplinary research (3.68 CGPA). Portfolio: a foreign research grant, peer-reviewed publications, a book chapter, cited research, Y-category journal book reviews, and textual-analysis articles.',
+  },
+  {
+    role: 'The Educator',
+    body: '11+ years teaching English Language, Linguistics, and Literary Studies at public-sector universities. Cambridge-certified EMI instructor; specializes in moving diverse cohorts from passive reading to active, theoretical interrogation of texts.',
+  },
+  {
+    role: 'The Institutional Leader',
+    body: 'Served as Head of the Examination Department at a newly established university — foundational policy drafting, institutional integrity, and complex academic structures; built the department from inception and executed a complete academic cycle single-handedly.',
+  },
+];
+
+const trajectory = [
+  {
+    step: 'MA',
+    system: 'Technological & speculative systems',
+    detail: 'Michael Crichton’s techno-thrillers — where empirical fact and speculative narrative blur.',
+  },
+  {
+    step: 'MPhil',
+    system: 'Sociopolitical & spatial systems',
+    detail: 'European dystopian fiction — mapping the fractures behind populism and the collapse of multiculturalism.',
+  },
+  {
+    step: 'PhD',
+    system: 'Geopolitical & power systems',
+    detail: 'Cold War and post-9/11 literature and spy thrillers — how narrative constructs global power (1979–2026).',
+  },
+];
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Rabia Mansoor',
+  jobTitle: 'Independent Researcher & PhD Scholar',
+  description:
+    'Independent researcher and PhD scholar in classical geopolitics, world literature, popular geopolitics and the spatial humanities.',
+  url: new URL('/about/', Astro.site).href,
+  knowsAbout: [
+    'Geopolitics',
+    'Popular Geopolitics',
+    'World Literature',
+    'Spatial Humanities',
+    'Critical Geopolitics',
+    'Narrative Theory',
+  ],
+  sameAs: [SCHOLAR_URL, ORCID_URL],
+};
+---
+
+<BaseLayout
+  title="About Me"
+  description="Rabia Mansoor — independent researcher, PhD scholar, educator and academic administrator with grant-winning research and published scholarship on how global power is constructed through narration."
+  hue="ink"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(personLd)} is:inline />
+
+  <!-- ============================================================ HERO -->
+  <section class="ahero panel--signature" data-parallax-scope>
+    <Contours variant="rings" class="ahero__rings" parallax={0.16} opacity={0.3} color="var(--rose)" />
+    <Contours variant="route" class="ahero__route" parallax={0.3} opacity={0.4} color="var(--amber)" />
+    <div class="wrap ahero__inner">
+      <p class="coord ahero__eyebrow" data-hero-line>Dossier · 04·N</p>
+      <h1 data-hero-line>About Me</h1>
+      <p class="ahero__roles" data-hero-line>
+        Independent Researcher · PhD Scholar
+      </p>
+      <p class="ahero__intro prose" data-hero-line>
+        I am an independent researcher, educator, and academic administrator with
+        grant-winning research and published scholarship. My niche lies in the
+        interdisciplinary study of Classical Geopolitics, World Literature,
+        popular geopolitics, and the spatial humanities — decoding how structural
+        power, imperial narratives, and classical geopolitical frameworks are
+        mapped in contemporary fiction and mass media.
+      </p>
+      <div class="ahero__links" data-hero-line>
+        <a class="btn btn--ghost" href={SCHOLAR_URL} target="_blank" rel="noopener" data-magnetic>
+          Google Scholar <span class="arrow">↗</span>
+        </a>
+        <a class="btn btn--ghost" href={ORCID_URL} target="_blank" rel="noopener" data-magnetic>
+          ORCID <span class="arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================== STATS -->
+  <section class="astats panel--amber" aria-labelledby="stats-h" data-parallax-scope>
+    <Contours variant="ridge" class="astats__ridge" parallax={0.1} opacity={0.22} color="var(--ink)" />
+    <div class="wrap">
+      <h2 id="stats-h" class="sr-only">Career at a glance</h2>
+      <div class="astats__grid" data-reveal-group>
+        <StatTile value={11} suffix="+" label="Years teaching at public-sector universities" />
+        <StatTile value={5} label="Published works — articles, reviews & a chapter" />
+        <StatTile value={1} label="Foreign research grant (Hanns Seidel Fellowship)" />
+        <StatTile value={3.68} decimals={2} label="MPhil CGPA" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= FACETS -->
+  <section class="facets panel--paper" aria-labelledby="facets-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">FIG. 01</span>
+        <span class="coord">Three vantage points</span>
+        <h2 id="facets-h" data-reveal>Scholar · Educator · Leader</h2>
+      </div>
+      <div class="facets__grid" data-reveal-group>
+        {
+          facets.map((f) => (
+            <article class="facet" data-reveal-item>
+              <h3>{f.role}</h3>
+              <p>{f.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================== TRAJECTORY -->
+  <section class="traj panel--ink" aria-labelledby="traj-h" data-draw-scope>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref traj__ref">FIG. 02</span>
+        <span class="coord traj__coord">Research trajectory</span>
+        <h2 id="traj-h" data-reveal>Three systems, one map</h2>
+      </div>
+
+      <div class="traj__track">
+        <svg class="traj__line" viewBox="0 0 20 600" preserveAspectRatio="none" aria-hidden="true">
+          <path
+            d="M10 0 L10 600"
+            fill="none"
+            stroke="var(--rose)"
+            stroke-width="3"
+            stroke-linecap="round"
+            data-draw
+          />
+        </svg>
+        <ol class="traj__steps" role="list" data-reveal-group>
+          {
+            trajectory.map((t) => (
+              <li class="traj__step" data-reveal-item>
+                <span class="traj__dot" aria-hidden="true"></span>
+                <span class="traj__badge">{t.step}</span>
+                <h3 class="traj__system">{t.system}</h3>
+                <p class="traj__detail">{t.detail}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== GRANT + HORIZON -->
+  <section class="closer panel--rose" aria-labelledby="grant-h">
+    <div class="wrap closer__grid">
+      <article class="grant">
+        <span class="coord">Grants &amp; Fellowships</span>
+        <h2 id="grant-h" data-reveal>Hanns Seidel Foundation Research Fellowship</h2>
+        <p class="grant__project" data-reveal>
+          <i>Internal Migration and Urban Infrastructure in Karachi</i>
+        </p>
+        <p class="prose" data-reveal>
+          A competitive, six-month funded project on the socioeconomic,
+          demographic, and structural impacts of unchecked domestic migration on
+          Karachi’s urban infrastructure.
+        </p>
+      </article>
+
+      <aside class="horizon" data-reveal aria-labelledby="horizon-h">
+        <span class="coord">Future horizons</span>
+        <h3 id="horizon-h">The road ahead</h3>
+        <p>
+          Extending the cartography of narrative into the present — tracing how
+          today’s fiction and mass media continue to spatialize power, threat,
+          and belonging.
+        </p>
+        <div class="horizon__links">
+          <a href={SCHOLAR_URL} target="_blank" rel="noopener">Google Scholar ↗</a>
+          <a href={ORCID_URL} target="_blank" rel="noopener">ORCID ↗</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* -------------------------------------------------------------- Hero */
+  .ahero {
+    position: relative;
+    padding-block: var(--space-2xl);
+    overflow: clip;
+  }
+  .ahero h1 { font-size: var(--step-6); line-height: 0.9; }
+  .ahero__roles {
+    font-family: var(--font-mono);
+    letter-spacing: 0.06em;
+    color: var(--rose);
+    margin-top: 0.4em;
+  }
+  .ahero__intro {
+    margin-top: var(--space-m);
+    max-width: 60ch;
+    font-size: var(--step-1);
+    color: rgba(255, 247, 236, 0.86);
+  }
+  .ahero__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: var(--space-l);
+  }
+  .ahero__rings { top: -22%; right: -16%; left: auto; width: 58%; }
+  .ahero__route { inset: 0 4% 0 auto; width: 34%; display: none; }
+  @media (min-width: 900px) { .ahero__route { display: block; } }
+
+  /* Stats */
+  .astats { position: relative; }
+  .astats__grid {
+    display: grid;
+    gap: var(--space-m) var(--space-l);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 560px) { .astats__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 960px) { .astats__grid { grid-template-columns: repeat(4, 1fr); } }
+
+  /* Facets */
+  .facets__grid {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+  }
+  .facet {
+    padding: var(--space-m);
+    border-top: 3px solid var(--ink);
+    display: grid;
+    gap: 0.5em;
+    align-content: start;
+  }
+  .facet h3 {
+    font-size: var(--step-2);
+    color: var(--rose-deep);
+  }
+  .facet p { font-size: var(--step--1); }
+  @media (min-width: 820px) { .facets__grid { grid-template-columns: repeat(3, 1fr); } }
+
+  /* Trajectory */
+  .traj__ref, .traj__coord { color: var(--rose); }
+  .traj__track {
+    position: relative;
+    padding-left: var(--space-l);
+  }
+  .traj__line {
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: 8px;
+    width: 20px;
+    height: auto;
+  }
+  .traj__steps { display: grid; gap: var(--space-xl); }
+  .traj__step {
+    position: relative;
+    display: grid;
+    gap: 0.4em;
+    align-content: start;
+  }
+  .traj__dot {
+    position: absolute;
+    left: calc(-1 * var(--space-l) + 1px);
+    top: 6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 3px solid var(--rose);
+    transform: translateX(-50%);
+  }
+  .traj__badge {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    color: var(--rose);
+  }
+  .traj__system { font-size: var(--step-2); }
+  .traj__detail {
+    color: rgba(255, 247, 236, 0.82);
+    max-width: 58ch;
+  }
+
+  /* Closer */
+  .closer__grid {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: 1fr;
+  }
+  .grant h2 { font-size: var(--step-3); margin: 0.3em 0 0.2em; }
+  .grant__project {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    margin-bottom: var(--space-s);
+  }
+  .grant .coord, .horizon .coord { color: var(--ink); }
+  .horizon {
+    padding: var(--space-m);
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: var(--radius-lg);
+    display: grid;
+    gap: 0.6em;
+    align-content: start;
+  }
+  .horizon .coord { color: var(--amber); }
+  .horizon h3 { font-size: var(--step-2); }
+  .horizon p { font-size: var(--step--1); color: rgba(255, 247, 236, 0.85); }
+  .horizon__links {
+    display: flex;
+    gap: var(--space-m);
+    margin-top: 0.4em;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .horizon__links a { color: var(--amber); text-underline-offset: 3px; }
+  @media (min-width: 820px) {
+    .closer__grid { grid-template-columns: 1.6fr 1fr; gap: var(--space-xl); align-items: start; }
+  }
+</style>
