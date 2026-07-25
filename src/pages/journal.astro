@@ -1,0 +1,411 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Contours from '../components/Contours.astro';
+
+import huntForRedOctober from '../assets/cinema/hunt-for-red-october.jpg';
+import goldeneye from '../assets/cinema/goldeneye.jpg';
+import theSiege from '../assets/cinema/the-siege.jpg';
+import drStrangelove from '../assets/cinema/dr-strangelove.jpg';
+import redDawn from '../assets/cinema/red-dawn.jpg';
+
+const focusAreas = [
+  {
+    title: 'Popular Geopolitics in Real-Time',
+    body: 'Analyzing how current geopolitical events and civilizational divides are framed by mass media and public discourse.',
+  },
+  {
+    title: 'The Spatial Humanities',
+    body: 'Brief explorations into how borders, internal migration, and physical geographies are continually reimagined in contemporary culture.',
+  },
+  {
+    title: 'Tropes & Statecraft',
+    body: 'Deconstructing the rhetorical shortcuts and narrative frameworks used by policymakers to justify or explain global strategy.',
+  },
+];
+
+// Each poster is placed in the era where the essay actually discusses that
+// film — captioned with its real title. Eras I and V had no poster supplied,
+// so they run as text-only steps.
+const eras = [
+  {
+    num: 'I',
+    range: '1940s–1950s',
+    title: 'The Early Cold War: Anti-Communist Paranoia',
+    posters: [],
+    body: 'A porous boundary between industry and state. The CIA secretly funded <i>Animal Farm</i> (1954); sci-fi like <i>The Thing</i> (1951) and <i>Red Planet Mars</i> (1952) weaponized alien invasion as a metaphor for communist infiltration; <i>My Son John</i> (1952) moved the ideological battle into the American home; <i>The Longest Day</i> (1961) showed active Pentagon–cinema cooperation.',
+  },
+  {
+    num: 'II',
+    range: '1950s–1960s',
+    title: 'Subverting the Cold War Consensus',
+    posters: [{ img: drStrangelove, film: 'Dr. Strangelove', year: '1964' }],
+    body: '<i>High Noon</i> (1952) as a structural critique of HUAC blacklists; <i>It Came from Outer Space</i> (1953) inverted the alien-invasion trope to condemn small-town xenophobia; <i>On the Beach</i> (1959) and Kubrick’s <i>Dr. Strangelove</i> (1964) dismantled and ridiculed mutually assured destruction.',
+  },
+  {
+    num: 'III',
+    range: '1980s',
+    title: 'The Late Cold War: Hypermasculinity & Resurgence',
+    posters: [{ img: redDawn, film: 'Red Dawn', year: '1984' }],
+    body: 'A triumphalist aesthetic: <i>Top Gun</i> (1986), <i>Firefox</i> (1984), <i>Rambo: First Blood Part II</i> (1986). <i>Red Dawn</i> (1984) modeled the ultimate spatial violation — a joint Soviet–Cuban invasion of the American Midwest.',
+  },
+  {
+    num: 'IV',
+    range: '1980s–1990s',
+    title: 'Post-Cold War Chaos: Shifting the Enemy Geography',
+    posters: [
+      { img: huntForRedOctober, film: 'The Hunt for Red October', year: '1990' },
+      { img: goldeneye, film: 'GoldenEye', year: '1995' },
+      { img: theSiege, film: 'The Siege', year: '1998' },
+    ],
+    body: '<i>GoldenEye</i> (1995), <i>The Peacemaker</i> (1997) and <i>Air Force One</i> (1997) spatialized the former Soviet bloc as a chaotic vacuum; <i>The Hunt for Red October</i> (1990) softened the Russian adversary. <i>Iron Eagle</i> (1986), <i>Navy SEALs</i> (1990), <i>The Siege</i> (1998) and <i>Rules of Engagement</i> (2000) shifted the backdrop to the Middle East. <i>Speed</i> (1994) and <i>The Rock</i> (1996) turned to domestic terrorism.',
+  },
+  {
+    num: 'V',
+    range: '2001–2006',
+    title: 'Post-9/11: Trauma and the War on Terror',
+    posters: [],
+    body: '<i>Collateral Damage</i> (2002) and <i>The Sum of All Fears</i> (2002) anticipated attacks; <i>United 93</i> (2006) and <i>World Trade Center</i> (2006) processed trauma; <i>Behind Enemy Lines</i> (2001) argued for unilateral action; President George W. Bush referenced <i>Kandahar</i> (2001) to justify intervention; Michael Moore’s <i>Fahrenheit 9/11</i> (2004) attempted direct electoral intervention.',
+  },
+];
+---
+
+<BaseLayout
+  title="Geopolitical Journal"
+  description="Dispatches on Narrative & Power — shorter analyses on the intersection of literature, mass media and statecraft, including the featured essay on National Security Cinema."
+  hue="amber"
+>
+  <!-- ============================================================ HERO -->
+  <section class="jhero panel--signature" data-parallax-scope>
+    <Contours variant="ridge" class="jhero__ridge" parallax={0.16} opacity={0.3} color="var(--ink)" />
+    <div class="wrap jhero__inner">
+      <p class="coord" data-hero-line>Field Log · 01·E</p>
+      <h1 data-hero-line>Geopolitical<br />Journal</h1>
+      <p class="jhero__sub" data-hero-line>Dispatches on Narrative &amp; Power</p>
+      <p class="jhero__intro prose" data-hero-line>
+        An active, living repository for shorter analyses, contemporary
+        commentary, and immediate reflections on the intersection of
+        literature, mass media, and statecraft.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================================================== FOCUS AREAS -->
+  <section class="focus panel--paper" aria-labelledby="focus-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">FIG. 01</span>
+        <span class="coord">Core areas</span>
+        <h2 id="focus-h" data-reveal>Three lines of inquiry</h2>
+      </div>
+      <ul class="focus__grid" role="list" data-reveal-group>
+        {
+          focusAreas.map((f, i) => (
+            <li class="card focus__card" data-reveal-item>
+              <span class="focus__idx">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{f.title}</h3>
+              <p>{f.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- =============================================== FEATURED DISPATCH -->
+  <section class="dispatch panel--ink" aria-labelledby="dispatch-h">
+    <div class="wrap">
+      <div class="dispatch__head">
+        <span class="coord dispatch__tag">Featured dispatch</span>
+        <h2 id="dispatch-h" data-reveal>
+          National Security Cinema
+        </h2>
+        <p class="dispatch__sub" data-reveal>
+          Hollywood as a Geopolitical Apparatus — reading the spatialization
+          of threat in modern film.
+        </p>
+        <p class="dispatch__lede prose" data-reveal>
+          When analyzing how global power dynamics are constructed through
+          narration, it is impossible to ignore the cinematic topography of
+          Hollywood. While my primary datasets often focus on literary fiction,
+          visual media serves as a highly potent infrastructure for
+          manufacturing geopolitical consent. Drawing on Klaus Dodds’
+          <i>Geopolitics: A Very Short Introduction</i> (2019), this dispatch
+          maps how Hollywood shifted its geographical imagination to spatialize
+          the “enemy” across distinct geopolitical eras.
+        </p>
+      </div>
+
+      <!-- Scrollytelling timeline -->
+      <div class="scrolly" data-scrolly data-parallax-scope>
+        <div class="scrolly__rail" aria-hidden="true">
+          <span class="scrolly__progress" data-scrolly-progress></span>
+        </div>
+        <ol class="scrolly__steps" role="list">
+          {
+            eras.map((era) => (
+              <li class="era" data-scrolly-step>
+                <div class="era__marker" aria-hidden="true">{era.num}</div>
+                <div class="era__body">
+                  <span class="era__range">{era.range}</span>
+                  <h3>{era.title}</h3>
+                  <p set:html={era.body} />
+                </div>
+                {era.posters.length > 0 && (
+                  <ul class="era__posters" role="list">
+                    {era.posters.map((p) => (
+                      <li class="poster">
+                        <Image
+                          src={p.img}
+                          alt={`Film poster for ${p.film} (${p.year})`}
+                          width={300}
+                          widths={[200, 300, 456]}
+                          sizes="(min-width: 820px) 220px, 44vw"
+                          loading="lazy"
+                        />
+                        <figcaption class="poster__cap">
+                          <span class="poster__film">{p.film}</span>
+                          <span class="poster__year">{p.year}</span>
+                        </figcaption>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <blockquote class="dispatch__conclusion" data-reveal>
+        <p>
+          Pop culture is never merely a reflection of the times; it is active
+          narrative infrastructure. By continuously re-mapping geopolitical
+          tropes — from the godless communist to the chaotic rogue state —
+          Hollywood has helped shape the American public’s geographical
+          imagination and manufacture consent for shifting global strategies.
+        </p>
+      </blockquote>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* -------------------------------------------------------------- Hero */
+  .jhero {
+    position: relative;
+    padding-block: var(--space-2xl);
+    overflow: clip;
+  }
+  .jhero h1 {
+    font-size: var(--step-6);
+    line-height: 0.86;
+    margin: 0.1em 0 0.2em;
+  }
+  .jhero__sub {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+  }
+  .jhero__intro {
+    margin-top: var(--space-m);
+    max-width: 54ch;
+    font-size: var(--step-1);
+  }
+  .jhero__ridge {
+    inset: auto 0 -10% 0;
+    top: 40%;
+  }
+
+  /* ------------------------------------------------------------- Focus */
+  .focus__grid {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+  }
+  .focus__card {
+    display: grid;
+    gap: 0.5em;
+    align-content: start;
+  }
+  .focus__idx {
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+    color: var(--amber-deep);
+    font-weight: 700;
+  }
+  .focus__card h3 {
+    font-size: var(--step-1);
+  }
+  .focus__card p {
+    font-size: var(--step--1);
+  }
+  @media (min-width: 760px) {
+    .focus__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ---------------------------------------------------------- Dispatch */
+  .dispatch {
+    overflow: clip;
+  }
+  .dispatch__head {
+    max-width: 60ch;
+    margin-bottom: var(--space-xl);
+  }
+  .dispatch__tag {
+    color: var(--amber);
+  }
+  .dispatch h2 {
+    font-size: var(--step-5);
+    margin: 0.2em 0 0.15em;
+  }
+  .dispatch__sub {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+    color: var(--amber);
+    margin-bottom: var(--space-m);
+  }
+  .dispatch__lede {
+    color: rgba(255, 247, 236, 0.82);
+  }
+
+  /* Scrollytelling */
+  .scrolly {
+    position: relative;
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: var(--space-m);
+  }
+  .scrolly__rail {
+    position: relative;
+    width: 3px;
+    justify-self: center;
+    background: var(--line-cream);
+    border-radius: 2px;
+  }
+  .scrolly__progress {
+    position: absolute;
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: 0;
+    background: var(--amber);
+    border-radius: 2px;
+  }
+  .scrolly__steps {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  .era {
+    display: grid;
+    gap: var(--space-m);
+    align-items: start;
+    position: relative;
+    transition: opacity 0.5s ease;
+  }
+  .era__marker {
+    position: absolute;
+    left: calc(-1 * var(--space-m) - 28px);
+    top: 0;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    transform: translateX(-50%);
+    margin-left: 14px;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    background: var(--ink);
+    color: var(--cream);
+    border: 2px solid var(--amber);
+    border-radius: 50%;
+    transition: background 0.4s ease, color 0.4s ease, transform 0.4s ease;
+  }
+  .era.is-active .era__marker {
+    background: var(--amber);
+    color: var(--ink);
+    transform: translateX(-50%) scale(1.08);
+  }
+  .era__posters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    margin-top: 0.4em;
+  }
+  .poster {
+    width: clamp(130px, 40vw, 200px);
+  }
+  .poster :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: var(--radius);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.5);
+    transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.2, 1),
+      filter 0.5s ease;
+    filter: saturate(0.82) brightness(0.86);
+  }
+  .era.is-active .poster :global(img) {
+    filter: saturate(1.05) brightness(1);
+  }
+  .poster:hover :global(img) {
+    transform: translateY(-6px) rotate(-1deg);
+  }
+  .poster__cap {
+    display: grid;
+    margin-top: 0.5em;
+    line-height: 1.15;
+  }
+  .poster__film {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--cream);
+  }
+  .poster__year {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--amber);
+    letter-spacing: 0.08em;
+  }
+  .era__range {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--amber);
+  }
+  .era__body h3 {
+    font-size: var(--step-2);
+    margin: 0.25em 0 0.4em;
+  }
+  .era__body p {
+    color: rgba(255, 247, 236, 0.8);
+    max-width: 60ch;
+  }
+
+  .dispatch__conclusion {
+    margin-top: var(--space-2xl);
+    border-left: 3px solid var(--amber);
+    padding-left: var(--space-m);
+    max-width: 62ch;
+  }
+  .dispatch__conclusion p {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.3;
+  }
+
+  @media (min-width: 820px) {
+    .scrolly {
+      grid-template-columns: 40px 1fr;
+    }
+    .era__marker {
+      left: -40px;
+      margin-left: 0;
+    }
+    .era__body p {
+      font-size: var(--step-0);
+    }
+  }
+</style>
