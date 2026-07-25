@@ -18,4 +18,10 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'auto',
   },
+  // Allow tunneling `astro dev`/`astro preview` through ngrok. A leading dot
+  // matches the domain and all subdomains, so regenerated free-tier URLs keep
+  // working. Harmless for production (Netlify serves the static dist directly).
+  server: {
+    allowedHosts: ['.ngrok-free.dev', '.ngrok-free.app', '.ngrok.app'],
+  },
 });
