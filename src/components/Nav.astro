@@ -1,0 +1,265 @@
+---
+import { NAV, SITE_NAME } from '../lib/site';
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav" data-nav>
+  <div class="nav__inner wrap">
+    <a class="nav__brand" href="/" aria-label={`${SITE_NAME} — home`}>
+      <span class="nav__mark" aria-hidden="true">◱</span>
+      <span class="nav__name">Rabia Mansoor</span>
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      <ul role="list">
+        {
+          NAV.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={['nav__link', { 'is-active': isActive(item.href) }]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                data-hue={item.hue}
+              >
+                <span class="nav__ref">{item.ref}</span>
+                <span class="nav__label">{item.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <button
+      class="nav__toggle"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-nav-toggle
+    >
+      <span class="sr-only">Menu</span>
+      <span class="nav__burger" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <!-- Mobile drawer -->
+  <div class="nav__drawer" id="mobile-menu" data-nav-drawer hidden>
+    <ul role="list">
+      {
+        NAV.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class:list={['nav__drawer-link', { 'is-active': isActive(item.href) }]}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              data-hue={item.hue}
+            >
+              <span class="nav__ref">{item.ref}</span>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .nav__inner {
+    min-height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+  }
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .nav__mark {
+    color: var(--signature);
+    font-size: 1.1em;
+  }
+
+  .nav__links {
+    display: none;
+  }
+  .nav__links ul {
+    display: flex;
+    gap: clamp(0.4rem, 1.4vw, 1.4rem);
+  }
+  .nav__link {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    padding: 0.4em 0.2em 0.5em;
+    text-decoration: none;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .nav__ref {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    opacity: 0.55;
+  }
+  .nav__label {
+    font-weight: 600;
+    font-size: var(--step-0);
+  }
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0.2em;
+    right: 0.2em;
+    bottom: 0.15em;
+    height: 2.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+  .nav__link:hover::after,
+  .nav__link:focus-visible::after {
+    transform: scaleX(1);
+  }
+  .nav__link.is-active {
+    color: var(--signature-deep);
+  }
+  .nav__link.is-active::after {
+    transform: scaleX(1);
+    background: var(--signature);
+    height: 3.5px;
+  }
+
+  /* Toggle button */
+  .nav__toggle {
+    --bar: var(--ink);
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    background: none;
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .nav__burger,
+  .nav__burger::before,
+  .nav__burger::after {
+    content: '';
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--bar);
+    transition: transform 0.3s ease, opacity 0.2s ease;
+  }
+  .nav__burger::before {
+    transform: translateY(-7px);
+  }
+  .nav__burger::after {
+    transform: translateY(5px);
+  }
+  .nav[data-open] .nav__burger {
+    background: transparent;
+  }
+  .nav[data-open] .nav__burger::before {
+    transform: rotate(45deg);
+  }
+  .nav[data-open] .nav__burger::after {
+    transform: rotate(-45deg) translateY(-1.5px) translateX(1px);
+  }
+
+  /* Mobile drawer */
+  .nav__drawer {
+    border-top: 1.5px solid var(--ink);
+    background: var(--paper);
+    padding: var(--space-s) var(--space-m) var(--space-m);
+  }
+  .nav__drawer[hidden] {
+    display: none;
+  }
+  .nav__drawer ul {
+    display: grid;
+    gap: 2px;
+  }
+  .nav__drawer-link {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9em;
+    padding: 0.85em 0.4em;
+    min-height: 48px;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    color: var(--ink);
+    border-bottom: 1px solid var(--line-ink);
+  }
+  .nav__drawer-link.is-active {
+    color: var(--signature-deep);
+  }
+  .nav__drawer-link .nav__ref {
+    align-self: center;
+  }
+
+  @media (min-width: 880px) {
+    .nav__links {
+      display: block;
+    }
+    .nav__toggle,
+    .nav__drawer {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Mobile menu toggle. Progressive: drawer works as a plain block if this
+  // fails to run (it just stays whatever `hidden` state was rendered).
+  function initNav() {
+    const header = document.querySelector<HTMLElement>('[data-nav]');
+    const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+    const drawer = document.querySelector<HTMLElement>('[data-nav-drawer]');
+    if (!header || !toggle || !drawer) return;
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      if (open) {
+        header.setAttribute('data-open', '');
+        drawer.hidden = false;
+      } else {
+        header.removeAttribute('data-open');
+        drawer.hidden = true;
+      }
+    };
+
+    toggle.addEventListener('click', () =>
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true')
+    );
+    drawer
+      .querySelectorAll('a')
+      .forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  }
+  document.addEventListener('astro:page-load', initNav);
+</script>

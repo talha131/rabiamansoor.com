@@ -1,0 +1,17 @@
+---
+interface Props {
+  eyebrow?: string;
+  gridRef?: string;
+  as?: 'h2' | 'h3';
+  align?: 'start' | 'center';
+}
+const { eyebrow, gridRef, as = 'h2', align = 'start' } = Astro.props;
+const Heading = as;
+---
+
+<header class="section-head" data-reveal style={`text-align:${align}`}>
+  {gridRef && <span class="grid-ref">{gridRef}</span>}
+  {eyebrow && <span class="coord">{eyebrow}</span>}
+  <Heading><slot /></Heading>
+  <slot name="lede" />
+</header>
