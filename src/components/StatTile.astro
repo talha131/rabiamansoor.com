@@ -1,0 +1,45 @@
+---
+interface Props {
+  value: number;
+  label: string;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+}
+const { value, label, prefix = '', suffix = '', decimals = 0 } = Astro.props;
+const staticValue = `${prefix}${value.toFixed(decimals)}${suffix}`;
+---
+
+<div class="stat" data-reveal-item>
+  <span
+    class="stat__value"
+    data-count={value}
+    data-count-prefix={prefix}
+    data-count-suffix={suffix}
+    data-count-decimals={decimals}
+  >{staticValue}</span>
+  <span class="stat__label">{label}</span>
+</div>
+
+<style>
+  .stat {
+    display: grid;
+    gap: 0.3em;
+    padding: var(--space-s) 0;
+    border-top: 2px solid currentColor;
+  }
+  .stat__value {
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    line-height: 0.95;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .stat__label {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    opacity: 0.8;
+    text-wrap: balance;
+  }
+</style>

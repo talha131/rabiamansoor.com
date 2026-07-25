@@ -1,0 +1,115 @@
+---
+import { NAV, SCHOLAR_URL, ORCID_URL, DEVELOPER } from '../lib/site';
+---
+
+<footer class="footer panel--ink">
+  <div class="wrap footer__grid">
+    <div class="footer__brand">
+      <p class="footer__name">Rabia Mansoor</p>
+      <p class="footer__role">
+        Independent Researcher · PhD Scholar · Educator
+      </p>
+    </div>
+
+    <nav class="footer__nav" aria-label="Footer">
+      <p class="coord coord--plain footer__eyebrow">Sections</p>
+      <ul role="list">
+        {NAV.map((i) => <li><a href={i.href}>{i.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="footer__links">
+      <p class="coord coord--plain footer__eyebrow">Scholarly index</p>
+      <ul role="list">
+        <li>
+          <a href={SCHOLAR_URL} target="_blank" rel="noopener">Google Scholar ↗</a>
+        </li>
+        <li><a href={ORCID_URL} target="_blank" rel="noopener">ORCID ↗</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap footer__base">
+    <p class="footer__coords">41°N · Cartography of Narrative · MMXXVI</p>
+    <p class="footer__credit">
+      Developed by
+      <a href={DEVELOPER.url} target="_blank" rel="noopener">{DEVELOPER.name}</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: var(--space-xl) var(--space-l);
+    border-top: 2px solid var(--signature);
+  }
+  .footer__grid {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: 1fr;
+    padding-bottom: var(--space-l);
+    border-bottom: 1px solid var(--line-cream);
+  }
+  .footer__name {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+  .footer__role {
+    color: rgba(255, 247, 236, 0.72);
+    margin-top: 0.4em;
+    font-size: var(--step--1);
+  }
+  .footer__eyebrow {
+    color: var(--amber);
+    margin-bottom: 0.9em;
+  }
+  .footer__nav ul,
+  .footer__links ul {
+    display: grid;
+    gap: 0.5em;
+  }
+  .footer__nav a,
+  .footer__links a {
+    text-decoration: none;
+    color: var(--cream);
+    text-underline-offset: 3px;
+  }
+  .footer__nav a:hover,
+  .footer__links a:hover {
+    text-decoration: underline;
+    color: var(--amber);
+  }
+  .footer__base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-s);
+    margin-top: var(--space-l);
+  }
+  .footer__coords {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 247, 236, 0.5);
+  }
+  /* The required credit — understated small font. */
+  .footer__credit {
+    font-size: 0.78rem;
+    color: rgba(255, 247, 236, 0.6);
+  }
+  .footer__credit a {
+    color: var(--cream);
+    text-underline-offset: 2px;
+  }
+  .footer__credit a:hover {
+    color: var(--amber);
+  }
+
+  @media (min-width: 700px) {
+    .footer__grid {
+      grid-template-columns: 1.4fr 1fr 1fr;
+    }
+  }
+</style>

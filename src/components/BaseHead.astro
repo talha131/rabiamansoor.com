@@ -1,0 +1,73 @@
+---
+import { SITE_NAME, SITE_DESC } from '../lib/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Path to an OG image in /public, or a generated one. */
+  ogImage?: string;
+}
+
+const { title, description = SITE_DESC, ogImage = '/og-default.png' } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = new URL(ogImage, Astro.site).href;
+const fullTitle =
+  title === SITE_NAME ? title : `${title} — ${SITE_NAME}`;
+
+// GA4 measurement id from Astro public env (undefined ⇒ script omitted).
+const GA_ID = import.meta.env.PUBLIC_GA_ID;
+const isProd = import.meta.env.PROD;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="canonical" href={canonical} />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImageUrl} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<!-- Mark JS presence before paint so reveals only hide when scripting works. -->
+<script is:inline>
+  document.documentElement.classList.add('js');
+</script>
+
+<!-- GA4 — only in production and only when PUBLIC_GA_ID is set. -->
+{
+  isProd && GA_ID && (
+    <>
+      <script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+      />
+      <script is:inline define:vars={{ GA_ID }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        if (navigator.doNotTrack !== '1' && window.doNotTrack !== '1') {
+          gtag('config', GA_ID, { anonymize_ip: true });
+        }
+      </script>
+    </>
+  )
+}

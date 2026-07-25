@@ -1,0 +1,89 @@
+---
+/* Decorative topographic contour lines — the recurring cartographic motif.
+   Purely ornamental: aria-hidden, non-interactive, parallax-friendly. */
+interface Props {
+  variant?: 'rings' | 'ridge' | 'route';
+  class?: string;
+  parallax?: number | null;
+  opacity?: number;
+  color?: string; // CSS color/var; defaults to currentColor
+}
+const {
+  variant = 'rings',
+  class: klass = '',
+  parallax = null,
+  opacity = 0.5,
+  color = 'currentColor',
+} = Astro.props;
+
+const parallaxAttr =
+  parallax === null ? {} : { 'data-parallax': String(parallax) };
+---
+
+<div
+  class:list={['contours', `contours--${variant}`, klass]}
+  style={`--c-opacity:${opacity}; color:${color};`}
+  aria-hidden="true"
+  {...parallaxAttr}
+>
+  {
+    variant === 'rings' && (
+      <svg viewBox="0 0 400 400" fill="none" preserveAspectRatio="xMidYMid meet">
+        {[180, 150, 120, 92, 66, 42, 22].map((r, i) => (
+          <circle
+            cx="200"
+            cy="200"
+            r={r}
+            stroke={color}
+            stroke-width={i === 2 ? 2 : 1}
+            stroke-dasharray={i % 2 ? '4 6' : 'none'}
+          />
+        ))}
+        <circle cx="200" cy="200" r="3" fill={color} stroke="none" />
+      </svg>
+    )
+  }
+  {
+    variant === 'ridge' && (
+      <svg viewBox="0 0 600 300" fill="none" preserveAspectRatio="none">
+        {[0, 26, 52, 80, 110, 144].map((o) => (
+          <path
+            d={`M0 ${240 - o} C 120 ${180 - o}, 200 ${260 - o}, 320 ${190 - o} S 520 ${150 - o}, 600 ${210 - o}`}
+            stroke={color}
+            stroke-width="1.5"
+          />
+        ))}
+      </svg>
+    )
+  }
+  {
+    variant === 'route' && (
+      <svg viewBox="0 0 400 600" fill="none" preserveAspectRatio="xMidYMid meet">
+        <path
+          d="M40 20 C 40 140, 340 180, 340 300 S 60 420, 200 580"
+          stroke={color}
+          stroke-width="2"
+          stroke-dasharray="2 10"
+          stroke-linecap="round"
+        />
+        {[[40, 20], [340, 300], [200, 580]].map(([x, y]) => (
+          <circle cx={x} cy={y} r="6" fill="none" stroke={color} stroke-width="2" />
+        ))}
+      </svg>
+    )
+  }
+</div>
+
+<style>
+  .contours {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .contours svg {
+    width: 100%;
+    height: 100%;
+    opacity: var(--c-opacity);
+  }
+</style>
