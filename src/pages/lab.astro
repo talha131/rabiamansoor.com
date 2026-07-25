@@ -1,0 +1,504 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Contours from '../components/Contours.astro';
+
+const topographies = [
+  {
+    n: '01',
+    title: 'The Intelligence & Espionage Archive',
+    tags: 'Cold War · Historical · Post-9/11 Espionage',
+    body: 'Testing grounds for how intelligence apparatuses, military fiction, and covert statecraft are spatialized in literature.',
+  },
+  {
+    n: '02',
+    title: 'Post-9/11 Discourse & Political Thrillers',
+    tags: 'Political Thrillers · Postmodern Political Fiction · Post-9/11 Fiction',
+    body: 'Examines shifting hegemony and the spatialization of the “enemy.”',
+  },
+  {
+    n: '03',
+    title: 'Speculative & Satirical Tales',
+    tags: 'Political Satire · Hard Sci-Fi · Speculative Fiction',
+    body: 'Extreme variables that model the theoretical limits of classical geopolitical doctrines.',
+  },
+];
+
+const peerReviewed = [
+  {
+    title:
+      'Geopolitical Tropes and Popular Geopolitics: The Great Game and Historical Narrative in Rudyard Kipling’s Kim (1901)',
+    venue: 'Journal of European Studies',
+    date: 'July 2026',
+    doi: 'https://doi.org/10.56384/jes.v42i2.445',
+    body: 'A 6,500-word study of “geopolitical tropes” as cognitive shortcuts; traces “The Great Game” from 19th-century imperial rivalry to modern superpower competition. Frameworks: Critical Geopolitics + Narrative Theory.',
+  },
+  {
+    title:
+      'Cultural Debate in the 21st Century on Declining Multiculturalism in Europe',
+    venue: 'Journal of European Studies',
+    date: 'July 2024',
+    doi: 'https://doi.org/10.56384/jes.v40i2.348',
+    body: 'Cited Article (h-index contribution: 1). Synthesizes European multiculturalism’s policy failures, Ibn Khaldun’s asabiyyah, and Huntington’s “Clash of Civilizations.”',
+  },
+];
+
+const reviews = [
+  {
+    title:
+      'The End of the World Is Just the Beginning: Mapping the Collapse of Globalization',
+    author: 'Peter Zeihan (2022)',
+    date: 'Jan 2024',
+    doi: 'https://doi.org/10.56384/jes.v40i1.337',
+    body: 'Evaluates Zeihan’s forecast of deglobalization driven by geography and demographic collapse.',
+  },
+  {
+    title: 'The Politics of Crisis in Europe',
+    author: 'Mai’a K. Davis Cross (2017)',
+    date: 'Jan 2020',
+    doi: null,
+    body: 'Evaluates “integrational panic” as a catalyst for deeper EU integration; a five-stage crisis model across the 2003 Iraq, 2005 Constitutional Treaty, and 2010 Eurozone crises.',
+  },
+];
+---
+
+<BaseLayout
+  title="The Lab"
+  description="Narrative Topographies — from an MA on Michael Crichton to current PhD research treating fiction as a primary dataset for mapping structural power, imperial tropes and statecraft."
+  hue="emerald"
+>
+  <!-- ============================================================ HERO -->
+  <section class="lhero panel--signature" data-parallax-scope>
+    <Contours variant="rings" class="lhero__rings" parallax={0.16} opacity={0.35} color="var(--ink)" />
+    <div class="wrap lhero__inner">
+      <p class="coord" data-hero-line>Research Station · 02·S</p>
+      <h1 data-hero-line>The Lab</h1>
+      <p class="lhero__sub" data-hero-line>Narrative Topographies</p>
+      <p class="lhero__manifesto prose" data-hero-line>
+        In this lab, literature serves as the primary data. From my foundational
+        MPhil work to my current PhD research, I treat the fictional narrative
+        landscape as a primary dataset to map structural power, imperial tropes,
+        and statecraft.
+      </p>
+    </div>
+  </section>
+
+  <!-- =============================================== ACTIVE EXPERIMENT -->
+  <section class="active panel--ink" aria-labelledby="active-h">
+    <div class="wrap">
+      <div class="active__head">
+        <span class="coord active__tag">
+          <span class="pulse" aria-hidden="true"></span>Active experiment
+        </span>
+        <h2 id="active-h" data-reveal>PhD — Narrative Discourse &amp; Global Power Dynamics</h2>
+        <p class="active__topic" data-reveal>
+          <i>Geopolitics and Global Narration (1979–2026)</i>
+        </p>
+        <div class="active__meta prose" data-reveal>
+          <p>
+            <strong>Focus:</strong> Interdisciplinary Social Sciences —
+            Geopolitics, Popular Geopolitics, World Literature, History.
+          </p>
+          <p>
+            Bridges International Relations and Comparative Literature to
+            understand how fiction shapes public perception of global power.
+            Primary datasets — <strong>Narrative Topographies</strong> —
+            classify novels and fiction published 1979–2012 into three
+            geopolitical topographies.
+          </p>
+        </div>
+      </div>
+
+      <ol class="topos" role="list" data-reveal-group>
+        {
+          topographies.map((t) => (
+            <li class="topo" data-reveal-item>
+              <span class="topo__n">{t.n}</span>
+              <h3>{t.title}</h3>
+              <p class="topo__tags">{t.tags}</p>
+              <p class="topo__body">{t.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================== ARCHIVED EXPERIMENTS -->
+  <section class="archive panel--paper" aria-labelledby="archive-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">ARCHIVE</span>
+        <span class="coord">Prior fieldwork</span>
+        <h2 id="archive-h" data-reveal>Archived experiments</h2>
+      </div>
+
+      <article class="study" data-reveal>
+        <header class="study__head">
+          <span class="study__badge">MPhil</span>
+          <h3>The Collapse of Multiculturalism in Europe</h3>
+          <p class="study__full">
+            A Eurocentric Analysis of Dystopian Fiction
+          </p>
+        </header>
+        <div class="study__grid">
+          <div class="prose">
+            <p>
+              Analyzes European responses to multiculturalism and ethnic anxiety
+              across modern dystopian world literature; interrogates the
+              perceived failure of multiculturalism in 21st-century Europe —
+              immigration, demographic imbalance, and the erosion of social
+              cohesion — and maps the fractures behind rising populism and
+              identity politics.
+            </p>
+            <p>
+              <strong>Methodology:</strong> qualitative, hermeneutic; treats
+              literature as an active diagnostic tool. Corpus of 7 works
+              bridging 3 classical dystopias with 4 contemporary novels.
+            </p>
+            <p>
+              <strong>Key findings:</strong> the Implementation Gap (fragmented
+              enclaves vs. a cohesive fabric); Literary Foresight (fiction as a
+              predictive lens); and the need for nuanced, interdisciplinary
+              dialogue.
+            </p>
+          </div>
+          <div class="study__aside">
+            <p class="coord coord--plain">Fields</p>
+            <p>World Literature · Political Philosophy · Multiculturalism · Speculative Fiction</p>
+            <p class="coord coord--plain">Classical models</p>
+            <ul role="list">
+              <li>Jean Raspail, <i>The Camp of the Saints</i> (1973)</li>
+              <li>Anthony Burgess, <i>1985</i> (1978)</li>
+              <li>P.D. James, <i>The Children of Men</i> (1992)</li>
+            </ul>
+            <p class="coord coord--plain">21st-century topography</p>
+            <ul role="list">
+              <li>Rob Sinclair, <i>Sleeper 13</i> (2018)</li>
+              <li>Michel Houellebecq, <i>Submission</i> (2015)</li>
+              <li>Jenny Erpenbeck, <i>Go, Went, Gone</i> (2015)</li>
+              <li>Mohsin Hamid, <i>Exit West</i> (2017)</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="study" data-reveal>
+        <header class="study__head">
+          <span class="study__badge">MA</span>
+          <h3>The Cutting Edge of Speculative Fiction</h3>
+          <p class="study__full">
+            Michael Crichton’s <i>Congo</i> (1980)
+          </p>
+        </header>
+        <div class="study__grid">
+          <div class="prose">
+            <p>
+              Positions <i>Congo</i> as foundational to modern speculative
+              fiction — Crichton eroding the boundary between empirical fact and
+              speculative narrative, blending imperial “Lost World” tropes with
+              technological discourse to critique corporate-scientific hubris.
+            </p>
+            <p>
+              <strong>Methodology:</strong> Crichton’s “Fiction-as-Fact” —
+              pseudo-documentary framing (faux citations, code, data graphs) and
+              the subversion of 19th-century adventure tropes.
+            </p>
+            <p>
+              <strong>Findings:</strong> architect of the techno-thriller; a
+              critique of scientific hubris (“playing God”); and the pedagogical
+              and cultural value of popular speculative narratives.
+            </p>
+          </div>
+          <div class="study__aside">
+            <p class="coord coord--plain">Fields</p>
+            <p>Contemporary English Literature · Speculative Fiction · Techno-Thriller Dynamics · Literature of Science &amp; Technology</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===================================================== PUBLICATIONS -->
+  <section class="pubs panel--emerald" aria-labelledby="pubs-h" data-parallax-scope>
+    <Contours variant="ridge" class="pubs__ridge" parallax={0.1} opacity={0.22} color="var(--ink)" />
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">RECORD</span>
+        <span class="coord">Published output</span>
+        <h2 id="pubs-h" data-reveal>Publications</h2>
+      </div>
+
+      <div class="pubs__group" data-reveal>
+        <h3 class="pubs__label">Peer-Reviewed</h3>
+        <ul class="pubs__list" role="list">
+          {
+            peerReviewed.map((p) => (
+              <li class="pub">
+                <div class="pub__meta">
+                  <span class="pub__venue">{p.venue}</span>
+                  <span class="pub__date">{p.date}</span>
+                </div>
+                <h4 class="pub__title">{p.title}</h4>
+                <p class="pub__body">{p.body}</p>
+                <a class="pub__doi" href={p.doi} target="_blank" rel="noopener">
+                  {p.doi.replace('https://', '')} ↗
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="pubs__group" data-reveal>
+        <h3 class="pubs__label">Book Reviews — Journal of European Studies</h3>
+        <ul class="pubs__list" role="list">
+          {
+            reviews.map((p) => (
+              <li class="pub">
+                <div class="pub__meta">
+                  <span class="pub__venue">{p.author}</span>
+                  <span class="pub__date">{p.date}</span>
+                </div>
+                <h4 class="pub__title">{p.title}</h4>
+                <p class="pub__body">{p.body}</p>
+                {p.doi && (
+                  <a class="pub__doi" href={p.doi} target="_blank" rel="noopener">
+                    {p.doi.replace('https://', '')} ↗
+                  </a>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="pubs__group" data-reveal>
+        <h3 class="pubs__label">Book Chapter</h3>
+        <ul class="pubs__list" role="list">
+          <li class="pub">
+            <div class="pub__meta">
+              <span class="pub__venue">Economic Migration: A Comparative Study (2021)</span>
+              <span class="pub__date">ISBN 978-969-8551-31-5</span>
+            </div>
+            <h4 class="pub__title">
+              World System Theory, Economic Migration, and Karachi: A
+              Comparative Study, its Implications and Challenges
+            </h4>
+            <p class="pub__body">
+              Uses Wallerstein’s World System Model and the Kondratieff Cycle to
+              map Karachi as a “semi-periphery” buffer; documents the 40-fold
+              population explosion (450,000 in 1947 → 20M+), katchi abadis, and
+              the informal sector (75% of the unskilled migrant workforce).
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* -------------------------------------------------------------- Hero */
+  .lhero {
+    position: relative;
+    padding-block: var(--space-2xl);
+    overflow: clip;
+  }
+  .lhero h1 {
+    font-size: var(--step-6);
+    line-height: 0.9;
+    margin: 0.1em 0 0.1em;
+  }
+  .lhero__sub {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+  }
+  .lhero__manifesto {
+    margin-top: var(--space-m);
+    max-width: 56ch;
+    font-size: var(--step-1);
+  }
+  .lhero__rings {
+    top: -20%;
+    right: -18%;
+    left: auto;
+    width: 60%;
+  }
+
+  /* ------------------------------------------------------------ Active */
+  .active__head {
+    max-width: 62ch;
+    margin-bottom: var(--space-xl);
+  }
+  .active__tag {
+    color: var(--emerald);
+  }
+  .pulse {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--emerald);
+    box-shadow: 0 0 0 0 var(--emerald);
+    animation: pulse 2.4s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(46, 196, 166, 0.6); }
+    70% { box-shadow: 0 0 0 12px rgba(46, 196, 166, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(46, 196, 166, 0); }
+  }
+  .active h2 {
+    font-size: var(--step-4);
+    margin: 0.3em 0 0.2em;
+  }
+  .active__topic {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    color: var(--emerald);
+    margin-bottom: var(--space-m);
+  }
+  .active__meta {
+    color: rgba(255, 247, 236, 0.82);
+  }
+  .active__meta strong { color: var(--cream); }
+
+  .topos {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+  }
+  .topo {
+    padding: var(--space-m);
+    border: 1.5px solid var(--line-cream);
+    border-top: 3px solid var(--emerald);
+    border-radius: var(--radius-lg);
+    display: grid;
+    gap: 0.5em;
+    align-content: start;
+    background: rgba(255, 247, 236, 0.03);
+    transition: transform 0.4s ease, background 0.4s ease;
+  }
+  .topo:hover {
+    transform: translateY(-6px);
+    background: rgba(46, 196, 166, 0.1);
+  }
+  .topo__n {
+    font-family: var(--font-mono);
+    font-size: var(--step-2);
+    color: var(--emerald);
+    font-weight: 700;
+  }
+  .topo h3 { font-size: var(--step-1); }
+  .topo__tags {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--emerald);
+    text-transform: uppercase;
+  }
+  .topo__body { color: rgba(255, 247, 236, 0.8); font-size: var(--step--1); }
+  @media (min-width: 820px) {
+    .topos { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ----------------------------------------------------------- Archive */
+  .study {
+    padding-block: var(--space-l);
+    border-top: 2px solid var(--ink);
+  }
+  .study:first-of-type { border-top: none; }
+  .study__head { margin-bottom: var(--space-m); }
+  .study__badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    padding: 0.3em 0.8em;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 40px;
+    margin-bottom: 0.7em;
+  }
+  .study__head h3 { font-size: var(--step-3); }
+  .study__full {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-1);
+    color: var(--emerald-deep);
+    margin-top: 0.2em;
+  }
+  .study__grid {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: 1fr;
+  }
+  .study__aside {
+    display: grid;
+    gap: 0.4em;
+    align-content: start;
+    font-size: var(--step--1);
+    border-left: 2px solid var(--emerald);
+    padding-left: var(--space-s);
+  }
+  .study__aside .coord {
+    color: var(--emerald-deep);
+    margin-top: 0.7em;
+  }
+  .study__aside ul { display: grid; gap: 0.25em; }
+  @media (min-width: 840px) {
+    .study__grid { grid-template-columns: 1.6fr 1fr; }
+  }
+
+  /* -------------------------------------------------------- Publications */
+  .pubs { position: relative; }
+  .pubs__group { margin-top: var(--space-l); }
+  .pubs__label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding-bottom: 0.6em;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: var(--space-s);
+  }
+  .pubs__list { display: grid; gap: var(--space-s); }
+  .pub {
+    padding: var(--space-m);
+    background: rgba(255, 247, 236, 0.5);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius-lg);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .pub:hover {
+    transform: translateY(-4px);
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .pub__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5em;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.5em;
+    color: var(--emerald-deep);
+  }
+  .pub__title {
+    font-size: var(--step-1);
+    line-height: 1.15;
+    margin-bottom: 0.4em;
+  }
+  .pub__body { font-size: var(--step--1); max-width: 70ch; }
+  .pub__doi {
+    display: inline-block;
+    margin-top: 0.7em;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink);
+    word-break: break-all;
+  }
+</style>
