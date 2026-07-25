@@ -1,0 +1,313 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Contours from '../components/Contours.astro';
+
+const catalog = [
+  {
+    group: 'Literary Studies & Critical Theory',
+    courses: [
+      'Pakistani Literature in English',
+      'Pakistani Anglophone Works',
+      'Translated Urdu Literature',
+      'Modern Novel',
+      'Modern Drama',
+      'Classical Literature (Novel, Drama, Poetry)',
+      'Literary Criticism',
+      'American Literature',
+      'Women’s Literature',
+    ],
+  },
+  {
+    group: 'Linguistics, Stylistics & Pedagogy',
+    courses: [
+      'Sociolinguistics',
+      'Psycholinguistics',
+      'English in Pakistan',
+      'Stylistics',
+      'Phonetics & Phonology',
+      'Teaching Vocabulary & Grammar',
+      'Audio-Visual Aids & Adaptation of Material',
+    ],
+  },
+  {
+    group: 'Academic Writing & Discourse',
+    courses: [
+      'Academic Reading & Writing (Advanced Diploma)',
+      'Creative Writing',
+      'Functional English (Elementary & Advanced)',
+      'Communication Skills',
+      'Mass Communication',
+    ],
+  },
+];
+
+const signature = [
+  {
+    title: 'Classical Novel: Austen and the Mechanics of Adaptation',
+    body: 'Moves classical literature from static history into active critical space via comparative structural studies — e.g. Pride and Prejudice against Austen’s wider bibliography — and scene-by-scene dissection of film and TV adaptations.',
+  },
+  {
+    title: 'Literary Criticism: Applied Frameworks and Textual Evaluation',
+    body: 'Trains students to apply classical methodologies (e.g. Aristotelian critique) to evaluate a text’s structural integrity using objective criteria.',
+  },
+];
+---
+
+<BaseLayout
+  title="The Classroom"
+  description="Teaching philosophy & certifications — a Cambridge-certified EMI instructor turning literary study into 21st-century skills: critical thinking, media literacy and adaptive reasoning."
+  hue="indigo"
+>
+  <!-- ============================================================ HERO -->
+  <section class="chero panel--signature" data-parallax-scope>
+    <Contours variant="rings" class="chero__rings" parallax={0.16} opacity={0.28} color="var(--cream)" />
+    <div class="wrap chero__inner">
+      <p class="coord" data-hero-line>Seminar Room · 03·W</p>
+      <h1 data-hero-line>The Classroom</h1>
+      <p class="chero__sub" data-hero-line>Teaching Philosophy &amp; Certifications</p>
+      <p class="chero__lede prose" data-hero-line>
+        My classroom operates as an active critical space — nurturing thinkers
+        who can systematically deconstruct complex narratives.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================================================== PHILOSOPHY -->
+  <section class="philosophy panel--paper" aria-labelledby="phil-h">
+    <div class="wrap philosophy__grid">
+      <div class="philosophy__body">
+        <div class="section-head">
+          <span class="grid-ref">FIG. 01</span>
+          <span class="coord">Pedagogical philosophy</span>
+          <h2 id="phil-h" data-reveal>From passive reading to active interrogation</h2>
+        </div>
+        <div class="prose" data-reveal>
+          <p>
+            I nurture critical thinkers who can systematically deconstruct
+            complex narratives — combining rigorous linguistic analysis with
+            creative engagement in literature and the arts to equip students to
+            map and interrogate structural power in fiction and reality.
+          </p>
+          <p>
+            This translates traditional literary study into 21st-century skills:
+            advanced critical thinking, media literacy, and adaptive reasoning.
+          </p>
+          <p>
+            <strong>Current instruction:</strong> Arts &amp; Humanities (HEC
+            General Course) — Foundation &amp; Advanced English Integration
+            (Certificate and Diploma courses).
+          </p>
+        </div>
+      </div>
+
+      <aside class="cert" data-reveal aria-label="Certification">
+        <div class="cert__badge">
+          <span class="cert__ribbon" aria-hidden="true">◇</span>
+          <span class="cert__issuer">University of Cambridge</span>
+          <span class="cert__name">EMI Skills</span>
+          <span class="cert__desc">English as a Medium of Instruction</span>
+          <span class="cert__tag">Global Certification</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ======================================================= CATALOG -->
+  <section class="catalog panel--ink" aria-labelledby="cat-h" data-parallax-scope>
+    <Contours variant="ridge" class="catalog__ridge" parallax={0.12} opacity={0.16} color="var(--indigo)" />
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">SYLLABUS</span>
+        <span class="coord catalog__coord">Courses taught</span>
+        <h2 id="cat-h" data-reveal>The catalog</h2>
+      </div>
+
+      <div class="catalog__grid" data-reveal-group>
+        {
+          catalog.map((c) => (
+            <div class="catalog__col" data-reveal-item>
+              <h3 class="catalog__group">{c.group}</h3>
+              <ul role="list">
+                {c.courses.map((course) => (
+                  <li><span class="catalog__tick" aria-hidden="true">/</span>{course}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== SIGNATURE COURSES -->
+  <section class="signature panel--indigo" aria-labelledby="sig-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="coord signature__coord">Signature courses</span>
+        <h2 id="sig-h" data-reveal>Where the method shows</h2>
+      </div>
+      <div class="signature__grid" data-reveal-group>
+        {
+          signature.map((s, i) => (
+            <article class="sigcard" data-reveal-item>
+              <span class="sigcard__n">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="signature__archive prose" data-reveal>
+        <span class="coord coord--plain">The Living Archive</span>
+        Course syllabi, reading lists, and pedagogical reflections for select
+        modules are periodically updated and archived here for current students
+        and fellow educators.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .chero {
+    position: relative;
+    padding-block: var(--space-2xl);
+    overflow: clip;
+  }
+  .chero h1 {
+    font-size: var(--step-6);
+    line-height: 0.9;
+  }
+  .chero__sub {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+    margin-top: 0.1em;
+  }
+  .chero__lede {
+    margin-top: var(--space-m);
+    max-width: 48ch;
+    font-size: var(--step-1);
+    color: rgba(255, 247, 236, 0.86);
+  }
+  .chero__rings { top: -25%; right: -15%; left: auto; width: 62%; }
+
+  /* Philosophy + certificate */
+  .philosophy__grid {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .cert__badge {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 0.35em;
+    padding: var(--space-l) var(--space-m);
+    background: var(--indigo);
+    color: var(--cream);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--ink);
+    box-shadow: 10px 12px 0 var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .cert__ribbon {
+    font-size: 2rem;
+    color: var(--amber);
+  }
+  .cert__issuer {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .cert__name {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+  .cert__desc { font-size: var(--step--1); opacity: 0.9; }
+  .cert__tag {
+    margin-top: 0.6em;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.4em 0.9em;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    border-radius: 40px;
+  }
+  @media (min-width: 860px) {
+    .philosophy__grid { grid-template-columns: 1.7fr 1fr; gap: var(--space-xl); }
+  }
+
+  /* Catalog */
+  .catalog { position: relative; }
+  .catalog__coord { color: var(--indigo); }
+  .catalog .grid-ref { color: rgba(108, 92, 231, 0.8); }
+  .catalog__grid {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: 1fr;
+  }
+  .catalog__group {
+    font-size: var(--step-1);
+    padding-bottom: 0.5em;
+    border-bottom: 2px solid var(--indigo);
+    margin-bottom: var(--space-s);
+  }
+  .catalog__col ul { display: grid; gap: 0.55em; }
+  .catalog__col li {
+    display: flex;
+    gap: 0.5em;
+    font-size: var(--step--1);
+    color: rgba(255, 247, 236, 0.86);
+  }
+  .catalog__tick { color: var(--indigo); font-family: var(--font-mono); }
+  @media (min-width: 780px) {
+    .catalog__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Signature */
+  .signature__coord { color: var(--amber); }
+  .signature__grid {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+  }
+  .sigcard {
+    padding: var(--space-m);
+    background: rgba(255, 247, 236, 0.08);
+    border: 1.5px solid var(--cream);
+    border-radius: var(--radius-lg);
+    display: grid;
+    gap: 0.5em;
+    align-content: start;
+    transition: transform 0.4s ease, background 0.4s ease;
+  }
+  .sigcard:hover { transform: translateY(-6px); background: rgba(255, 247, 236, 0.14); }
+  .sigcard__n {
+    font-family: var(--font-mono);
+    font-size: var(--step-2);
+    color: var(--amber);
+    font-weight: 700;
+  }
+  .sigcard h3 { font-size: var(--step-1); }
+  .sigcard p { color: rgba(255, 247, 236, 0.88); font-size: var(--step--1); }
+  .signature__archive {
+    margin-top: var(--space-l);
+    max-width: 60ch;
+  }
+  .signature__archive .coord {
+    display: block;
+    color: var(--amber);
+    margin-bottom: 0.4em;
+  }
+  @media (min-width: 720px) {
+    .signature__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
