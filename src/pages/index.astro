@@ -1,0 +1,516 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Contours from '../components/Contours.astro';
+import StatTile from '../components/StatTile.astro';
+import { NAV, SITE_TAGLINE } from '../lib/site';
+
+import r1 from '../assets/library/r1.jpg';
+import r2 from '../assets/library/r2.jpg';
+import r3 from '../assets/library/r3.jpg';
+import r4 from '../assets/library/r4.jpg';
+import r5 from '../assets/library/r5.jpg';
+import r6 from '../assets/library/r6.jpg';
+import r7 from '../assets/library/r7.jpg';
+import r8 from '../assets/library/r8.jpg';
+import r9 from '../assets/library/r9.jpg';
+import r10 from '../assets/library/r10.jpg';
+
+const library = [
+  { img: r1, title: 'Prisoners of Geography', author: 'Tim Marshall' },
+  { img: r2, title: 'The Revenge of Geography', author: 'Robert D. Kaplan' },
+  { img: r3, title: 'Geopolitics: The Geography of International Relations', author: 'Saul Bernard Cohen' },
+  { img: r4, title: 'The Geopolitics Reader', author: 'Ó Tuathail, Dalby & Routledge' },
+  { img: r5, title: 'Classical Geopolitics: A New Analytical Model', author: 'Phil Kelly' },
+  { img: r6, title: 'Theories of Geopolitics', author: 'Whisker & Spiker' },
+  { img: r7, title: 'The Grand Chessboard', author: 'Zbigniew Brzezinski' },
+  { img: r8, title: 'Popular Culture, Geopolitics & Identity', author: 'Dittmer & Bos' },
+  { img: r9, title: 'Popular Geopolitics: Plotting an Evolving Interdiscipline', author: 'Saunders & Strukov' },
+  { img: r10, title: 'Geopolitics: A Very Short Introduction', author: 'Klaus Dodds', href: '/journal/' },
+];
+// Duplicate the set so the marquee can loop seamlessly.
+const marquee = [...library, ...library];
+
+const nonHome = NAV.filter((n) => n.href !== '/');
+---
+
+<BaseLayout title="Rabia Mansoor" hue="rose">
+  <!-- ============================================================ HERO -->
+  <section class="hero panel--signature" data-parallax-scope>
+    <Contours variant="rings" class="hero__rings" parallax={0.14} opacity={0.4} />
+    <Contours variant="route" class="hero__route" parallax={0.28} opacity={0.5} />
+
+    <div class="wrap hero__inner">
+      <p class="coord hero__eyebrow" data-hero-line>
+        N 24°51′ · E 67°00′ · Karachi
+      </p>
+      <h1 class="hero__name" data-hero-line>Rabia Mansoor</h1>
+      <p class="hero__roles" data-hero-line>
+        Independent Researcher · PhD Scholar · Educator · Academic Administrator
+      </p>
+
+      <blockquote class="hero__poem">
+        <span data-hero-line>Two roads diverged in a wood, and I&mdash;</span>
+        <span data-hero-line>I took the one less traveled by,</span>
+        <span data-hero-line>And that has made all the difference.</span>
+        <cite data-hero-line>— Robert Frost, <i>The Road Not Taken</i></cite>
+      </blockquote>
+
+      <p class="hero__tagline" data-hero-line>{SITE_TAGLINE}</p>
+
+      <div class="hero__cta" data-hero-line>
+        <a class="btn" href="/journal/" data-magnetic>
+          Enter the Journal <span class="arrow">→</span>
+        </a>
+        <a class="btn btn--ghost" href="/about/" data-magnetic>
+          Read the CV <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__scroll" aria-hidden="true">
+      <span>Scroll</span>
+      <span class="hero__scroll-line"></span>
+    </div>
+  </section>
+
+  <!-- ========================================================= LIBRARY -->
+  <section class="library panel--ink" aria-labelledby="library-h">
+    <div class="wrap library__head">
+      <span class="grid-ref">FIG. 01</span>
+      <span class="coord">The Library · Foundational Influences</span>
+      <h2 id="library-h" data-reveal>The maps behind the work</h2>
+      <p class="library__lede prose" data-reveal>
+        Ten geopolitics texts form the intellectual bedrock of this research —
+        the atlases against which every narrative is read. Hover a spine to
+        surface its title.
+      </p>
+    </div>
+
+    <div class="marquee" data-marquee>
+      <ul class="marquee__track" role="list">
+        {
+          marquee.map((book, i) => {
+            const Card = book.href ? 'a' : 'figure';
+            return (
+              <li class="marquee__item">
+                <Card
+                  class:list={['book', { 'book--link': book.href }]}
+                  {...(book.href ? { href: book.href } : {})}
+                >
+                  <Image
+                    src={book.img}
+                    alt={`${book.title} by ${book.author}`}
+                    width={200}
+                    height={300}
+                    widths={[160, 200, 300]}
+                    sizes="200px"
+                    loading={i < 6 ? 'eager' : 'lazy'}
+                    class="book__cover"
+                  />
+                  <figcaption class="book__cap">
+                    <span class="book__title">{book.title}</span>
+                    <span class="book__author">{book.author}</span>
+                    {book.href && <span class="book__link">Read the dispatch ↗</span>}
+                  </figcaption>
+                </Card>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ====================================================== SECTION NAV -->
+  <section class="explore panel--paper" aria-labelledby="explore-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">FIG. 02</span>
+        <span class="coord">Chart a course</span>
+        <h2 id="explore-h" data-reveal>Four territories</h2>
+      </div>
+
+      <ul class="explore__grid" role="list" data-reveal-group>
+        {
+          nonHome.map((item, i) => (
+            <li data-reveal-item>
+              <a class="tile" href={item.href} data-hue={item.hue}>
+                <span class="tile__ref">{item.ref}</span>
+                <span class="tile__name">{item.label}</span>
+                <span class="tile__desc">
+                  {[
+                    'Dispatches on narrative & power',
+                    'Narrative topographies & research',
+                    'Teaching philosophy & certifications',
+                    'The résumé — bio, trajectory & grants',
+                  ][i]}
+                </span>
+                <span class="tile__go" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================================================ RÉSUMÉ HIGHLIGHTS -->
+  <section class="highlights panel--amber" aria-labelledby="hl-h" data-parallax-scope>
+    <Contours variant="ridge" class="highlights__ridge" parallax={0.1} opacity={0.25} color="var(--ink)" />
+    <div class="wrap">
+      <div class="section-head">
+        <span class="coord">Résumé · at a glance</span>
+        <h2 id="hl-h" data-reveal>Eleven years in the field</h2>
+      </div>
+      <div class="highlights__grid" data-reveal-group>
+        <StatTile value={11} suffix="+" label="Years teaching English, Linguistics & Literary Studies" />
+        <StatTile value={1} label="Foreign research grant — Hanns Seidel Fellowship" />
+        <StatTile value={3.68} decimals={2} label="MPhil CGPA" />
+        <StatTile value={1} label="Cambridge-certified EMI instructor" />
+      </div>
+      <p class="highlights__foot prose" data-reveal>
+        Peer-reviewed publications, Y-category journal book reviews, and a book
+        chapter — the full record lives on the
+        <a class="link" href="/about/">About page</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ---------------------------------------------------------------- Hero */
+  .hero {
+    position: relative;
+    min-height: min(94svh, 900px);
+    display: grid;
+    align-items: center;
+    padding-block: var(--space-2xl);
+  }
+  .hero__inner {
+    position: relative;
+    z-index: 2;
+    max-width: 60rem;
+  }
+  .hero__eyebrow {
+    margin-bottom: var(--space-m);
+  }
+  .hero__name {
+    font-size: var(--step-6);
+    line-height: 0.9;
+    margin-bottom: 0.15em;
+  }
+  .hero__roles {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    max-width: 40ch;
+    margin-bottom: var(--space-l);
+  }
+  .hero__poem {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-style: italic;
+    line-height: 1.34;
+    max-width: 24ch;
+    border-left: 3px solid var(--ink);
+    padding-left: var(--space-s);
+    margin-bottom: var(--space-l);
+  }
+  .hero__poem span {
+    display: block;
+  }
+  .hero__poem cite {
+    display: block;
+    margin-top: 0.6em;
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    opacity: 0.75;
+  }
+  .hero__tagline {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 600;
+    line-height: 1.05;
+    max-width: 18ch;
+    margin-bottom: var(--space-l);
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+  }
+  .hero__rings {
+    top: -30%;
+    left: auto;
+    right: -20%;
+    width: 70%;
+    color: var(--ink);
+  }
+  .hero__route {
+    inset: 0 0 0 auto;
+    width: 40%;
+    right: 4%;
+    color: var(--ink);
+    display: none;
+  }
+  .hero__scroll {
+    position: absolute;
+    bottom: var(--space-m);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    gap: 0.5em;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .hero__scroll-line {
+    width: 1.5px;
+    height: 42px;
+    background: var(--ink);
+    transform-origin: top;
+    animation: scrollpulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollpulse {
+    0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+
+  @media (min-width: 900px) {
+    .hero__route {
+      display: block;
+    }
+  }
+
+  /* ------------------------------------------------------------- Library */
+  .library {
+    padding-block: var(--space-2xl);
+    overflow: clip;
+  }
+  .library__head {
+    display: grid;
+    gap: var(--space-s);
+    margin-bottom: var(--space-l);
+  }
+  .library__head .coord,
+  .library__head .grid-ref {
+    color: var(--rose);
+  }
+  .library__lede {
+    color: rgba(255, 247, 236, 0.78);
+    max-width: 52ch;
+  }
+
+  .marquee {
+    position: relative;
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .marquee__track {
+    display: flex;
+    gap: var(--space-m);
+    width: max-content;
+    padding-inline: var(--space-m);
+    animation: marquee 60s linear infinite;
+  }
+  .marquee:hover .marquee__track,
+  .marquee:focus-within .marquee__track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .book {
+    position: relative;
+    display: block;
+    width: clamp(120px, 14vw, 176px);
+    text-decoration: none;
+    color: var(--cream);
+  }
+  .book__cover {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 3px;
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+  .book:hover .book__cover,
+  .book:focus-visible .book__cover {
+    transform: translateY(-10px) rotate(-1.5deg);
+  }
+  .book__cap {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 2.4em 0.6em 0.6em;
+    display: grid;
+    gap: 0.15em;
+    background: linear-gradient(to top, rgba(20, 27, 51, 0.96), transparent);
+    border-radius: 0 0 3px 3px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .book:hover .book__cap,
+  .book:focus-visible .book__cap {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .book__title {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    line-height: 1.1;
+  }
+  .book__author {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    opacity: 0.8;
+  }
+  .book__link {
+    margin-top: 0.35em;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--amber);
+  }
+  .book--link .book__cover {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track {
+      animation: none;
+      flex-wrap: wrap;
+      width: 100%;
+      justify-content: center;
+    }
+    .marquee {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+  }
+
+  /* Touch devices have no hover — show captions statically under each cover
+     (the marquee still scrolls). */
+  @media (prefers-reduced-motion: reduce), (hover: none) {
+    .book__cap {
+      opacity: 1;
+      transform: none;
+      position: static;
+      background: none;
+      padding: 0.5em 0 0;
+      color: rgba(255, 247, 236, 0.8);
+    }
+    .book__link {
+      color: var(--amber);
+    }
+  }
+
+  /* ------------------------------------------------------------- Explore */
+  .explore__grid {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: 1fr;
+  }
+  .tile {
+    position: relative;
+    display: grid;
+    gap: 0.4em;
+    padding: var(--space-m);
+    min-height: 180px;
+    align-content: end;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--paper-2);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.2, 1),
+      background 0.4s ease, color 0.4s ease;
+  }
+  .tile__ref {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    opacity: 0.6;
+  }
+  .tile__name {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+  .tile__desc {
+    font-size: var(--step--1);
+    max-width: 28ch;
+  }
+  .tile__go {
+    position: absolute;
+    top: var(--space-m);
+    right: var(--space-m);
+    font-size: var(--step-2);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.2, 1);
+  }
+  .tile[data-hue='amber'] { --tile-c: var(--amber); }
+  .tile[data-hue='emerald'] { --tile-c: var(--emerald); }
+  .tile[data-hue='indigo'] { --tile-c: var(--indigo); }
+  .tile[data-hue='ink'] { --tile-c: var(--ink); }
+  .tile:hover,
+  .tile:focus-visible {
+    transform: translateY(-6px);
+    background: var(--tile-c);
+    color: var(--ink);
+  }
+  .tile[data-hue='ink']:hover,
+  .tile[data-hue='ink']:focus-visible,
+  .tile[data-hue='indigo']:hover,
+  .tile[data-hue='indigo']:focus-visible {
+    color: var(--cream);
+  }
+  .tile:hover .tile__go,
+  .tile:focus-visible .tile__go {
+    transform: translate(4px, -4px);
+  }
+
+  @media (min-width: 640px) {
+    .explore__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ---------------------------------------------------------- Highlights */
+  .highlights {
+    position: relative;
+  }
+  .highlights__ridge {
+    inset: auto 0 0 0;
+    top: 30%;
+  }
+  .highlights__grid {
+    display: grid;
+    gap: var(--space-m) var(--space-l);
+    grid-template-columns: 1fr;
+  }
+  .highlights__foot {
+    margin-top: var(--space-l);
+    max-width: 46ch;
+  }
+  @media (min-width: 560px) {
+    .highlights__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 960px) {
+    .highlights__grid { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>
