@@ -141,7 +141,7 @@ const jsonLd: Record<string, unknown> = {
             </p>
           )
         }
-        <div class="article__meta" data-reveal>
+        <div class="article__meta">
           <ul class="article__meta-list" role="list">
             {metaCells.map((cell) => <li>{cell}</li>)}
           </ul>
@@ -167,7 +167,7 @@ const jsonLd: Record<string, unknown> = {
         </div>
         {
           data.impact && (
-            <p class="article__impact" data-reveal>
+            <p class="article__impact">
               {data.impact}
             </p>
           )
