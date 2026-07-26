@@ -16,3 +16,6 @@ node_modules/
 # logs
 npm-debug.log*
 .screenshots/
+
+# Local Netlify folder
+.netlify
