@@ -65,8 +65,9 @@ This repository mixes three kinds of material under three licenses — see
 - **Written content** (essays, research summaries, reviews, bio, page copy, and
   everything under `src/content/`) — © Rabia Mansoor, licensed
   **[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)**.
-  Share verbatim with attribution; no adaptations, commercial use, or model
-  training. Full text in [`LICENSE-CONTENT`](./LICENSE-CONTENT).
+  Share verbatim with attribution; no adaptations or commercial use. (AI
+  crawling for discovery and citation is welcomed — see `public/robots.txt`.)
+  Full text in [`LICENSE-CONTENT`](./LICENSE-CONTENT).
 - **Website source code** — © Talha Mansoor, licensed **MIT**
   ([`LICENSE-CODE`](./LICENSE-CODE)).
 - **Book covers and film posters** — property of their respective publishers

@@ -42,9 +42,11 @@ make preview       # serve the production build locally
 ## Content & licensing guardrail
 
 Written content is **Rabia Mansoor's** IP under **CC BY-NC-ND 4.0** — no
-derivatives, commercial reuse, or training reuse; don't paste it elsewhere.
-Book covers and film posters are **third-party** media (publishers / studios) —
-never assert copyright over them. See `LICENSE`.
+commercial use or derivatives; attribution required. AI crawling for discovery
+and citation is **welcomed** (see `public/robots.txt` and `public/llms.txt`);
+that's about access, not a waiver of the license. Book covers and film posters
+are **third-party** media (publishers / studios) — never assert copyright over
+them. See `LICENSE`.
 
 ## Deploy / SEO
 
