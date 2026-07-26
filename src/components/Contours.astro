@@ -1,8 +1,13 @@
 ---
 /* Decorative topographic contour lines — the recurring cartographic motif.
-   Purely ornamental: aria-hidden, non-interactive, parallax-friendly. */
+   Purely ornamental: aria-hidden, non-interactive, parallax-friendly.
+
+   Each page's hero uses a DISTINCT nested-outline shape so the pages read
+   apart at a glance: rings (home), diamond (journal), trapezoid (lab),
+   hexagon (classroom), square (about). ridge/route are shared line motifs
+   used for secondary section decoration. */
 interface Props {
-  variant?: 'rings' | 'ridge' | 'route';
+  variant?: 'rings' | 'diamond' | 'trapezoid' | 'hexagon' | 'square' | 'ridge' | 'route';
   class?: string;
   parallax?: number | null;
   opacity?: number;
@@ -18,6 +23,29 @@ const {
 
 const parallaxAttr =
   parallax === null ? {} : { 'data-parallax': String(parallax) };
+
+// Shared geometry for the nested-outline shapes.
+const CX = 200;
+const CY = 200;
+const R = [180, 150, 120, 92, 66, 42, 22];
+const dash = (i: number) => (i % 2 ? '4 6' : undefined);
+const weight = (i: number) => (i === 2 ? 2 : 1);
+
+const diamondPts = (r: number) =>
+  `${CX},${CY - r} ${CX + r},${CY} ${CX},${CY + r} ${CX - r},${CY}`;
+
+// Isosceles trapezoid, narrower at the top.
+const trapPts = (r: number) =>
+  `${CX - 0.55 * r},${CY - r} ${CX + 0.55 * r},${CY - r} ${CX + r},${CY + r} ${CX - r},${CY + r}`;
+
+// Flat-top hexagon.
+const hexPts = (r: number) =>
+  [30, 90, 150, 210, 270, 330]
+    .map((a) => {
+      const rad = (a * Math.PI) / 180;
+      return `${(CX + r * Math.cos(rad)).toFixed(1)},${(CY + r * Math.sin(rad)).toFixed(1)}`;
+    })
+    .join(' ');
 ---
 
 <div
@@ -29,17 +57,50 @@ const parallaxAttr =
   {
     variant === 'rings' && (
       <svg viewBox="0 0 400 400" fill="none" preserveAspectRatio="xMidYMid meet">
-        {[180, 150, 120, 92, 66, 42, 22].map((r, i) => (
-          <circle
-            cx="200"
-            cy="200"
-            r={r}
-            stroke={color}
-            stroke-width={i === 2 ? 2 : 1}
-            stroke-dasharray={i % 2 ? '4 6' : 'none'}
-          />
+        {R.map((r, i) => (
+          <circle cx={CX} cy={CY} r={r} stroke={color} stroke-width={weight(i)} stroke-dasharray={dash(i)} />
         ))}
-        <circle cx="200" cy="200" r="3" fill={color} stroke="none" />
+        <circle cx={CX} cy={CY} r="3" fill={color} stroke="none" />
+      </svg>
+    )
+  }
+  {
+    variant === 'diamond' && (
+      <svg viewBox="0 0 400 400" fill="none" preserveAspectRatio="xMidYMid meet">
+        {R.map((r, i) => (
+          <polygon points={diamondPts(r)} stroke={color} stroke-width={weight(i)} stroke-dasharray={dash(i)} stroke-linejoin="round" />
+        ))}
+        <circle cx={CX} cy={CY} r="3" fill={color} stroke="none" />
+      </svg>
+    )
+  }
+  {
+    variant === 'trapezoid' && (
+      <svg viewBox="0 0 400 400" fill="none" preserveAspectRatio="xMidYMid meet">
+        {R.map((r, i) => (
+          <polygon points={trapPts(r)} stroke={color} stroke-width={weight(i)} stroke-dasharray={dash(i)} stroke-linejoin="round" />
+        ))}
+        <circle cx={CX} cy={CY} r="3" fill={color} stroke="none" />
+      </svg>
+    )
+  }
+  {
+    variant === 'hexagon' && (
+      <svg viewBox="0 0 400 400" fill="none" preserveAspectRatio="xMidYMid meet">
+        {R.map((r, i) => (
+          <polygon points={hexPts(r)} stroke={color} stroke-width={weight(i)} stroke-dasharray={dash(i)} stroke-linejoin="round" />
+        ))}
+        <circle cx={CX} cy={CY} r="3" fill={color} stroke="none" />
+      </svg>
+    )
+  }
+  {
+    variant === 'square' && (
+      <svg viewBox="0 0 400 400" fill="none" preserveAspectRatio="xMidYMid meet">
+        {R.map((r, i) => (
+          <rect x={CX - r} y={CY - r} width={2 * r} height={2 * r} rx="6" stroke={color} stroke-width={weight(i)} stroke-dasharray={dash(i)} />
+        ))}
+        <circle cx={CX} cy={CY} r="3" fill={color} stroke="none" />
       </svg>
     )
   }
