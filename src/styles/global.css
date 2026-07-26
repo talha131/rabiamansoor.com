@@ -61,6 +61,10 @@ ol[role='list'] {
   --emerald-deep: #0e7c67;
   --indigo-deep: #4a3bc4;
 
+  /* Lighter emerald for small text on the dark ink field — the saturated
+     --emerald reads as low-contrast at small sizes on navy. */
+  --emerald-bright: #6fe6cd;
+
   /* Neutral supports derived from ink/cream */
   --paper: #fff7ec;
   --paper-2: #f6ead6;
