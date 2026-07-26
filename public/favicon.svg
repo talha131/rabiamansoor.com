@@ -1,9 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="RM">
-  <rect width="64" height="64" rx="12" fill="#141b33" />
-  <g fill="none" stroke="#ff5d8f" stroke-width="2.4">
-    <circle cx="32" cy="32" r="22" />
-    <circle cx="32" cy="32" r="15" stroke="#ffc93c" />
-    <circle cx="32" cy="32" r="8" stroke="#2ec4a6" />
-  </g>
-  <circle cx="32" cy="32" r="3" fill="#fff7ec" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Rabia Mansoor">
+  <!-- Light cream tile keeps the rose mark prominent on both light and dark browser tabs -->
+  <rect width="64" height="64" rx="14" fill="#fff7ec" />
+  <rect x="14.5" y="14.5" width="35" height="35" rx="5" fill="none" stroke="#ff5d8f" stroke-width="4" />
+  <rect x="30.5" y="18.5" width="15" height="15" rx="2.5" fill="#ff5d8f" />
 </svg>
