@@ -24,6 +24,9 @@ const articles = defineCollection({
       date: z.string().optional(),
       /** ISO date, only where a real published date exists — feeds JSON-LD datePublished. */
       datePublished: z.string().optional(),
+      /** ISO date of the last substantive revision — feeds the sitemap `lastmod`
+          (falls back to `datePublished`, then the build date, when absent). */
+      updated: z.string().optional(),
       doi: z.string().url().optional(),
       isbn: z.string().optional(),
       impact: z.string().optional(),
