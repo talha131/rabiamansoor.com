@@ -389,6 +389,66 @@ p {
   border: 0;
 }
 
+/* ------------------------------------------ Attention-seeking CTAs */
+/* A call-to-action that periodically wiggles ("alarm clock") and, with the
+   --glare modifier, catches a diagonal light sweep. The wiggle uses the
+   independent `translate`/`rotate` properties so it composes cleanly with any
+   `transform`-based hover lift. All of it is gated behind reduced-motion, and
+   hovering/focusing settles the element so interaction is never fighting the
+   animation. */
+@keyframes cta-shake {
+  0%, 79%, 100% { translate: 0 0; rotate: 0deg; }
+  81% { translate: -2px 0; rotate: -1.6deg; }
+  84% { translate: 2px 0; rotate: 1.6deg; }
+  87% { translate: -2px 0; rotate: -1.2deg; }
+  90% { translate: 2px 0; rotate: 1deg; }
+  94% { translate: -1px 0; rotate: -0.5deg; }
+  97% { translate: 0 0; rotate: 0deg; }
+}
+@keyframes cta-glare {
+  0% { transform: translateX(-140%) skewX(-16deg); }
+  55%, 100% { transform: translateX(160%) skewX(-16deg); }
+}
+.cta-attn {
+  position: relative;
+  overflow: hidden;
+}
+.cta-attn--glare::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  width: 55%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    var(--glare, rgba(255, 255, 255, 0.5)) 50%,
+    transparent 100%
+  );
+  transform: translateX(-140%) skewX(-16deg);
+}
+/* Keep button content above the light sweep. */
+.cta-attn > * {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cta-attn {
+    animation: cta-shake 4.2s ease-in-out infinite;
+  }
+  .cta-attn--glare::after {
+    animation: cta-glare 4.2s ease-in-out infinite;
+  }
+}
+/* Settle the wiggle while the user is engaging with it. */
+.cta-attn:hover,
+.cta-attn:focus-visible {
+  animation: none;
+  translate: 0;
+  rotate: 0;
+}
+
 /* --------------------------------------------------- Motion foundations */
 /* Reveals: content is VISIBLE by default. The motion module sets the
    initial hidden state via GSAP only once it has actually loaded and run,
