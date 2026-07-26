@@ -30,6 +30,7 @@ const peerReviewed = [
     venue: 'Journal of European Studies',
     date: 'July 2026',
     doi: 'https://doi.org/10.56384/jes.v42i2.445',
+    slug: 'kim-great-game',
     body: 'A 6,500-word study of “geopolitical tropes” as cognitive shortcuts; traces “The Great Game” from 19th-century imperial rivalry to modern superpower competition. Frameworks: Critical Geopolitics + Narrative Theory.',
   },
   {
@@ -38,6 +39,7 @@ const peerReviewed = [
     venue: 'Journal of European Studies',
     date: 'July 2024',
     doi: 'https://doi.org/10.56384/jes.v40i2.348',
+    slug: 'declining-multiculturalism-europe',
     body: 'Cited Article (h-index contribution: 1). Synthesizes European multiculturalism’s policy failures, Ibn Khaldun’s asabiyyah, and Huntington’s “Clash of Civilizations.”',
   },
 ];
@@ -49,6 +51,7 @@ const reviews = [
     author: 'Peter Zeihan (2022)',
     date: 'Jan 2024',
     doi: 'https://doi.org/10.56384/jes.v40i1.337',
+    slug: 'review-zeihan-end-of-the-world',
     body: 'Evaluates Zeihan’s forecast of deglobalization driven by geography and demographic collapse.',
   },
   {
@@ -56,6 +59,7 @@ const reviews = [
     author: 'Mai’a K. Davis Cross (2017)',
     date: 'Jan 2020',
     doi: null,
+    slug: 'review-cross-politics-of-crisis',
     body: 'Evaluates “integrational panic” as a catalyst for deeper EU integration; a five-stage crisis model across the 2003 Iraq, 2005 Constitutional Treaty, and 2010 Eurozone crises.',
   },
 ];
@@ -139,6 +143,10 @@ const reviews = [
           <p class="study__full">
             A Eurocentric Analysis of Dystopian Fiction
           </p>
+          <a class="study__read" href="/articles/mphil-collapse-of-multiculturalism/" target="_blank" rel="noopener">
+            Read the full study <span aria-hidden="true">↗</span>
+            <span class="sr-only"> — opens in a new tab</span>
+          </a>
         </header>
         <div class="study__grid">
           <div class="prose">
@@ -189,6 +197,10 @@ const reviews = [
           <p class="study__full">
             Michael Crichton’s <i>Congo</i> (1980)
           </p>
+          <a class="study__read" href="/articles/ma-crichton-congo/" target="_blank" rel="noopener">
+            Read the full study <span aria-hidden="true">↗</span>
+            <span class="sr-only"> — opens in a new tab</span>
+          </a>
         </header>
         <div class="study__grid">
           <div class="prose">
@@ -240,9 +252,15 @@ const reviews = [
                 </div>
                 <h4 class="pub__title">{p.title}</h4>
                 <p class="pub__body">{p.body}</p>
-                <a class="pub__doi" href={p.doi} target="_blank" rel="noopener">
-                  {p.doi.replace('https://', '')} ↗
-                </a>
+                <div class="pub__links">
+                  <a class="pub__read" href={`/articles/${p.slug}/`} target="_blank" rel="noopener">
+                    Read in full <span aria-hidden="true">↗</span>
+                    <span class="sr-only"> — opens in a new tab</span>
+                  </a>
+                  <a class="pub__doi" href={p.doi} target="_blank" rel="noopener">
+                    DOI: {p.doi.replace('https://doi.org/', '')} ↗
+                  </a>
+                </div>
               </li>
             ))
           }
@@ -261,11 +279,17 @@ const reviews = [
                 </div>
                 <h4 class="pub__title">{p.title}</h4>
                 <p class="pub__body">{p.body}</p>
-                {p.doi && (
-                  <a class="pub__doi" href={p.doi} target="_blank" rel="noopener">
-                    {p.doi.replace('https://', '')} ↗
+                <div class="pub__links">
+                  <a class="pub__read" href={`/articles/${p.slug}/`} target="_blank" rel="noopener">
+                    Read in full <span aria-hidden="true">↗</span>
+                    <span class="sr-only"> — opens in a new tab</span>
                   </a>
-                )}
+                  {p.doi && (
+                    <a class="pub__doi" href={p.doi} target="_blank" rel="noopener">
+                      DOI: {p.doi.replace('https://doi.org/', '')} ↗
+                    </a>
+                  )}
+                </div>
               </li>
             ))
           }
@@ -290,6 +314,12 @@ const reviews = [
               population explosion (450,000 in 1947 → 20M+), katchi abadis, and
               the informal sector (75% of the unskilled migrant workforce).
             </p>
+            <div class="pub__links">
+              <a class="pub__read" href="/articles/karachi-world-system-theory/" target="_blank" rel="noopener">
+                Read in full <span aria-hidden="true">↗</span>
+                <span class="sr-only"> — opens in a new tab</span>
+              </a>
+            </div>
           </li>
         </ul>
       </div>
@@ -487,12 +517,58 @@ const reviews = [
     margin-bottom: 0.4em;
   }
   .pub__body { font-size: var(--step--1); max-width: 70ch; }
+  .pub__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6em var(--space-m);
+    margin-top: var(--space-s);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--line-ink);
+  }
+  .pub__read {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--emerald-deep);
+    text-decoration: none;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .pub__read:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
   .pub__doi {
-    display: inline-block;
-    margin-top: 0.7em;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    color: var(--ink);
+    color: var(--ink-soft);
     word-break: break-all;
+  }
+
+  /* Study-card "read the full study" affordance */
+  .study__read {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-top: var(--space-s);
+    min-height: 44px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--emerald-deep);
+    text-decoration: none;
+  }
+  .study__read:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 </style>
