@@ -18,24 +18,28 @@ const BUILD_DATE = new Date().toISOString().slice(0, 10);
 // and our frontmatter-derived map compare cleanly regardless of trailing slash.
 const routeKey = (pathname) => `/${pathname.replace(/^\/+|\/+$/g, '')}/`.replace('//', '/');
 
-// Map each article route to an ISO `lastmod`, read straight from frontmatter at
-// config load. We scan the files ourselves (a tiny `key: value` frontmatter
-// read) rather than pull in a YAML dependency or the astro:content runtime,
-// which isn't available this early. `updated` wins over `datePublished`; pages
-// with neither fall back to BUILD_DATE in `serialize`.
+// Scan article frontmatter once at config load — a tiny `key: value` read,
+// rather than a YAML dependency or the astro:content runtime, which isn't
+// available this early. Yields two things per article route:
+//   - lastmods: ISO date for the sitemap `<lastmod>` (`updated` wins over
+//     `datePublished`; pages with neither fall back to BUILD_DATE in serialize).
+//   - draftRoutes: routes flagged `draft: true`, so the sitemap can drop them
+//     defensively even though getStaticPaths already excludes them from the build.
 const ARTICLES_DIR = 'src/content/articles';
 
-function articleLastmods() {
-  const map = new Map();
+function scanArticles() {
+  const lastmods = new Map();
+  const draftRoutes = new Set();
   let files = [];
   try {
     files = fs.readdirSync(ARTICLES_DIR);
   } catch {
-    return map; // no articles dir yet — nothing to map
+    return { lastmods, draftRoutes }; // no articles dir yet — nothing to map
   }
   for (const file of files) {
     if (!/\.mdx?$/.test(file)) continue;
     const slug = file.replace(/\.mdx?$/, '');
+    const route = routeKey(`/articles/${slug}`);
     const raw = fs.readFileSync(path.join(ARTICLES_DIR, file), 'utf8');
     const block = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     if (!block) continue;
@@ -45,12 +49,13 @@ function articleLastmods() {
       return m ? m[1].replace(/^['"]|['"]$/g, '').trim() : null;
     };
     const iso = scalar('updated') || scalar('datePublished');
-    if (iso) map.set(routeKey(`/articles/${slug}`), iso);
+    if (iso) lastmods.set(route, iso);
+    if (scalar('draft') === 'true') draftRoutes.add(route);
   }
-  return map;
+  return { lastmods, draftRoutes };
 }
 
-const ARTICLE_LASTMOD = articleLastmods();
+const { lastmods: ARTICLE_LASTMOD, draftRoutes: DRAFT_ROUTES } = scanArticles();
 
 // https://astro.build/config
 export default defineConfig({
@@ -59,6 +64,10 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
+      // Belt-and-braces: drop any draft article route. getStaticPaths already
+      // excludes drafts from the build, so this only matters if that filter
+      // ever regresses — a draft must never leak into the sitemap.
+      filter: (url) => !DRAFT_ROUTES.has(routeKey(new URL(url).pathname)),
       // Give every URL a `lastmod`: articles use their frontmatter date; all
       // other pages use the build date. Emitted as YYYY-MM-DD for consistency.
       serialize(item) {
