@@ -31,10 +31,19 @@ import { NAV, SCHOLAR_URL, ORCID_URL, DEVELOPER } from '../lib/site';
 
   <div class="wrap footer__base">
     <p class="footer__coords">41°N · Cartography of Narrative · MMXXVI</p>
-    <p class="footer__credit">
-      Developed by
-      <a href={DEVELOPER.url} target="_blank" rel="noopener">{DEVELOPER.name}</a>
-    </p>
+    <div class="footer__legal">
+      <p class="footer__license">
+        © 2026 Rabia Mansoor · Content licensed under
+        <a
+          href="https://creativecommons.org/licenses/by-nc-nd/4.0/"
+          target="_blank"
+          rel="noopener license">CC BY-NC-ND 4.0 ↗</a>
+      </p>
+      <p class="footer__credit">
+        Developed by
+        <a href={DEVELOPER.url} target="_blank" rel="noopener">{DEVELOPER.name}</a>
+      </p>
+    </div>
   </div>
 </footer>
 
@@ -94,17 +103,30 @@ import { NAV, SCHOLAR_URL, ORCID_URL, DEVELOPER } from '../lib/site';
     text-transform: uppercase;
     color: rgba(255, 247, 236, 0.5);
   }
-  /* The required credit — understated small font. */
+  /* License + credit — understated small font, right-aligned on wide screens. */
+  .footer__legal {
+    display: grid;
+    gap: 0.35em;
+  }
+  .footer__license,
   .footer__credit {
     font-size: 0.78rem;
     color: rgba(255, 247, 236, 0.6);
   }
+  .footer__license a,
   .footer__credit a {
     color: var(--cream);
     text-underline-offset: 2px;
   }
+  .footer__license a:hover,
   .footer__credit a:hover {
     color: var(--amber);
+  }
+
+  @media (min-width: 700px) {
+    .footer__legal {
+      text-align: right;
+    }
   }
 
   @media (min-width: 700px) {
