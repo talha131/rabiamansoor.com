@@ -76,7 +76,7 @@ const eras = [
   hue="amber"
 >
   <!-- ============================================================ HERO -->
-  <section class="jhero panel--signature" data-parallax-scope>
+  <section class="jhero panel panel--signature" data-parallax-scope>
     <Contours variant="ridge" class="jhero__ridge" parallax={0.16} opacity={0.3} color="var(--ink)" />
     <div class="wrap jhero__inner">
       <p class="coord" data-hero-line>Field Log · 01·E</p>
@@ -91,7 +91,7 @@ const eras = [
   </section>
 
   <!-- ==================================================== FOCUS AREAS -->
-  <section class="focus panel--paper" aria-labelledby="focus-h">
+  <section class="focus panel panel--paper" aria-labelledby="focus-h">
     <div class="wrap">
       <div class="section-head">
         <span class="grid-ref">FIG. 01</span>
@@ -113,7 +113,7 @@ const eras = [
   </section>
 
   <!-- =============================================== FEATURED DISPATCH -->
-  <section class="dispatch panel--ink" aria-labelledby="dispatch-h">
+  <section class="dispatch panel panel--ink" aria-labelledby="dispatch-h">
     <div class="wrap">
       <div class="dispatch__head">
         <span class="coord dispatch__tag">Featured dispatch</span>
@@ -192,11 +192,6 @@ const eras = [
 
 <style>
   /* -------------------------------------------------------------- Hero */
-  .jhero {
-    position: relative;
-    padding-block: var(--space-2xl);
-    overflow: clip;
-  }
   .jhero h1 {
     font-size: var(--step-6);
     line-height: 0.86;
@@ -245,9 +240,6 @@ const eras = [
   }
 
   /* ---------------------------------------------------------- Dispatch */
-  .dispatch {
-    overflow: clip;
-  }
   .dispatch__head {
     max-width: 60ch;
     margin-bottom: var(--space-xl);

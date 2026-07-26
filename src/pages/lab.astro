@@ -67,7 +67,7 @@ const reviews = [
   hue="emerald"
 >
   <!-- ============================================================ HERO -->
-  <section class="lhero panel--signature" data-parallax-scope>
+  <section class="lhero panel panel--signature" data-parallax-scope>
     <Contours variant="rings" class="lhero__rings" parallax={0.16} opacity={0.35} color="var(--ink)" />
     <div class="wrap lhero__inner">
       <p class="coord" data-hero-line>Research Station · 02·S</p>
@@ -83,7 +83,7 @@ const reviews = [
   </section>
 
   <!-- =============================================== ACTIVE EXPERIMENT -->
-  <section class="active panel--ink" aria-labelledby="active-h">
+  <section class="active panel panel--ink" aria-labelledby="active-h">
     <div class="wrap">
       <div class="active__head">
         <span class="coord active__tag">
@@ -124,7 +124,7 @@ const reviews = [
   </section>
 
   <!-- ============================================== ARCHIVED EXPERIMENTS -->
-  <section class="archive panel--paper" aria-labelledby="archive-h">
+  <section class="archive panel panel--paper" aria-labelledby="archive-h">
     <div class="wrap">
       <div class="section-head">
         <span class="grid-ref">ARCHIVE</span>
@@ -219,7 +219,7 @@ const reviews = [
   </section>
 
   <!-- ===================================================== PUBLICATIONS -->
-  <section class="pubs panel--emerald" aria-labelledby="pubs-h" data-parallax-scope>
+  <section class="pubs panel panel--emerald" aria-labelledby="pubs-h" data-parallax-scope>
     <Contours variant="ridge" class="pubs__ridge" parallax={0.1} opacity={0.22} color="var(--ink)" />
     <div class="wrap">
       <div class="section-head">
@@ -299,11 +299,6 @@ const reviews = [
 
 <style>
   /* -------------------------------------------------------------- Hero */
-  .lhero {
-    position: relative;
-    padding-block: var(--space-2xl);
-    overflow: clip;
-  }
   .lhero h1 {
     font-size: var(--step-6);
     line-height: 0.9;
@@ -451,7 +446,6 @@ const reviews = [
   }
 
   /* -------------------------------------------------------- Publications */
-  .pubs { position: relative; }
   .pubs__group { margin-top: var(--space-l); }
   .pubs__label {
     font-family: var(--font-mono);
