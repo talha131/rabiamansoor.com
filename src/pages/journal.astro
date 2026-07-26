@@ -76,8 +76,8 @@ const eras = [
   hue="amber"
 >
   <!-- ============================================================ HERO -->
-  <section class="jhero panel--signature" data-parallax-scope>
-    <Contours variant="ridge" class="jhero__ridge" parallax={0.16} opacity={0.3} color="var(--ink)" />
+  <section class="jhero panel panel--signature" data-parallax-scope>
+    <Contours variant="diamond" class="jhero__shape" parallax={0.16} opacity={0.32} color="var(--ink)" />
     <div class="wrap jhero__inner">
       <p class="coord" data-hero-line>Field Log · 01·E</p>
       <h1 data-hero-line>Geopolitical<br />Journal</h1>
@@ -91,7 +91,7 @@ const eras = [
   </section>
 
   <!-- ==================================================== FOCUS AREAS -->
-  <section class="focus panel--paper" aria-labelledby="focus-h">
+  <section class="focus panel panel--paper" aria-labelledby="focus-h">
     <div class="wrap">
       <div class="section-head">
         <span class="grid-ref">FIG. 01</span>
@@ -113,7 +113,7 @@ const eras = [
   </section>
 
   <!-- =============================================== FEATURED DISPATCH -->
-  <section class="dispatch panel--ink" aria-labelledby="dispatch-h">
+  <section class="dispatch panel panel--ink" aria-labelledby="dispatch-h">
     <div class="wrap">
       <div class="dispatch__head">
         <span class="coord dispatch__tag">Featured dispatch</span>
@@ -192,11 +192,6 @@ const eras = [
 
 <style>
   /* -------------------------------------------------------------- Hero */
-  .jhero {
-    position: relative;
-    padding-block: var(--space-2xl);
-    overflow: clip;
-  }
   .jhero h1 {
     font-size: var(--step-6);
     line-height: 0.86;
@@ -212,9 +207,11 @@ const eras = [
     max-width: 54ch;
     font-size: var(--step-1);
   }
-  .jhero__ridge {
-    inset: auto 0 -10% 0;
-    top: 40%;
+  :global(.contours.jhero__shape) {
+    top: -25%;
+    right: -20%;
+    left: auto;
+    width: 66%;
   }
 
   /* ------------------------------------------------------------- Focus */
@@ -245,9 +242,6 @@ const eras = [
   }
 
   /* ---------------------------------------------------------- Dispatch */
-  .dispatch {
-    overflow: clip;
-  }
   .dispatch__head {
     max-width: 60ch;
     margin-bottom: var(--space-xl);
@@ -281,6 +275,12 @@ const eras = [
     position: relative;
     width: 3px;
     justify-self: center;
+    /* Inset so the rail runs from the first marker's centre to the last
+       marker's centre rather than beyond both. Top = marker centre offset
+       (constant). Bottom clears the final era's trailing body copy, which is
+       taller on narrow viewports where it wraps to more lines — hence the
+       larger base value, tightened on wider screens (see media query). */
+    margin-block: 30px 285px;
     background: var(--line-cream);
     border-radius: 2px;
   }
@@ -306,7 +306,7 @@ const eras = [
   .era__marker {
     position: absolute;
     left: calc(-1 * var(--space-m) - 28px);
-    top: 0;
+    top: 8px; /* centre the circle beside the year + title cluster */
     width: 44px;
     height: 44px;
     display: grid;
@@ -370,10 +370,13 @@ const eras = [
     letter-spacing: 0.08em;
   }
   .era__range {
+    display: block;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: 0.04em;
     color: var(--amber);
+    margin-bottom: 0.3em;
   }
   .era__body h3 {
     font-size: var(--step-2);
@@ -399,6 +402,9 @@ const eras = [
   @media (min-width: 820px) {
     .scrolly {
       grid-template-columns: 40px 1fr;
+    }
+    .scrolly__rail {
+      margin-block-end: 212px;
     }
     .era__marker {
       left: -40px;

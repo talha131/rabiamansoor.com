@@ -36,7 +36,7 @@ const nonHome = NAV.filter((n) => n.href !== '/');
 
 <BaseLayout title="Rabia Mansoor" hue="rose">
   <!-- ============================================================ HERO -->
-  <section class="hero panel--signature" data-parallax-scope>
+  <section class="hero panel panel--signature" data-parallax-scope>
     <Contours variant="rings" class="hero__rings" parallax={0.14} opacity={0.4} />
     <Contours variant="route" class="hero__route" parallax={0.28} opacity={0.5} />
 
@@ -75,7 +75,7 @@ const nonHome = NAV.filter((n) => n.href !== '/');
   </section>
 
   <!-- ========================================================= LIBRARY -->
-  <section class="library panel--ink" aria-labelledby="library-h">
+  <section class="library panel panel--ink" aria-labelledby="library-h">
     <div class="wrap library__head">
       <span class="grid-ref">FIG. 01</span>
       <span class="coord">The Library · Foundational Influences</span>
@@ -123,7 +123,7 @@ const nonHome = NAV.filter((n) => n.href !== '/');
   </section>
 
   <!-- ====================================================== SECTION NAV -->
-  <section class="explore panel--paper" aria-labelledby="explore-h">
+  <section class="explore panel panel--paper" aria-labelledby="explore-h">
     <div class="wrap">
       <div class="section-head">
         <span class="grid-ref">FIG. 02</span>
@@ -156,8 +156,8 @@ const nonHome = NAV.filter((n) => n.href !== '/');
   </section>
 
   <!-- ================================================ RÉSUMÉ HIGHLIGHTS -->
-  <section class="highlights panel--amber" aria-labelledby="hl-h" data-parallax-scope>
-    <Contours variant="ridge" class="highlights__ridge" parallax={0.1} opacity={0.25} color="var(--ink)" />
+  <section class="highlights panel panel--amber" aria-labelledby="hl-h" data-parallax-scope>
+    <Contours variant="ridge" class="highlights__ridge" parallax={0.1} opacity={0.1} color="var(--ink)" />
     <div class="wrap">
       <div class="section-head">
         <span class="coord">Résumé · at a glance</span>
@@ -181,11 +181,9 @@ const nonHome = NAV.filter((n) => n.href !== '/');
 <style>
   /* ---------------------------------------------------------------- Hero */
   .hero {
-    position: relative;
     min-height: min(94svh, 900px);
     display: grid;
     align-items: center;
-    padding-block: var(--space-2xl);
   }
   .hero__inner {
     position: relative;
@@ -242,14 +240,17 @@ const nonHome = NAV.filter((n) => n.href !== '/');
     flex-wrap: wrap;
     gap: var(--space-s);
   }
-  .hero__rings {
+  /* Contours render their own root element (own style scope), so these
+     placement rules must be :global() to reach them, and must out-specify
+     the component's own `.contours { inset: 0 }` — hence `.contours.<name>`. */
+  :global(.contours.hero__rings) {
     top: -30%;
     left: auto;
     right: -20%;
     width: 70%;
     color: var(--ink);
   }
-  .hero__route {
+  :global(.contours.hero__route) {
     inset: 0 0 0 auto;
     width: 40%;
     right: 4%;
@@ -284,16 +285,12 @@ const nonHome = NAV.filter((n) => n.href !== '/');
   }
 
   @media (min-width: 900px) {
-    .hero__route {
+    :global(.contours.hero__route) {
       display: block;
     }
   }
 
   /* ------------------------------------------------------------- Library */
-  .library {
-    padding-block: var(--space-2xl);
-    overflow: clip;
-  }
   .library__head {
     display: grid;
     gap: var(--space-s);
@@ -491,10 +488,7 @@ const nonHome = NAV.filter((n) => n.href !== '/');
   }
 
   /* ---------------------------------------------------------- Highlights */
-  .highlights {
-    position: relative;
-  }
-  .highlights__ridge {
+  :global(.contours.highlights__ridge) {
     inset: auto 0 0 0;
     top: 30%;
   }

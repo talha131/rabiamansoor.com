@@ -61,6 +61,10 @@ ol[role='list'] {
   --emerald-deep: #0e7c67;
   --indigo-deep: #4a3bc4;
 
+  /* Lighter emerald for small text on the dark ink field — the saturated
+     --emerald reads as low-contrast at small sizes on navy. */
+  --emerald-bright: #6fe6cd;
+
   /* Neutral supports derived from ink/cream */
   --paper: #fff7ec;
   --paper-2: #f6ead6;
@@ -96,6 +100,12 @@ ol[role='list'] {
   --space-l: clamp(2.6rem, 2rem + 3vw, 4.5rem);
   --space-xl: clamp(4rem, 3rem + 5vw, 7.5rem);
   --space-2xl: clamp(6rem, 4rem + 8vw, 11rem);
+
+  /* Section rhythm — the vertical padding every color panel gets. Change
+     these two values to tune the breathing room between sections across
+     the whole site. */
+  --section-padding: clamp(3rem, 2rem + 3vw, 5.5rem);
+  --section-padding-tight: clamp(2rem, 1.5rem + 2vw, 3.5rem);
 
   --measure: 62ch;
   --radius: 4px;
@@ -187,7 +197,7 @@ p {
 /* --------------------------------------------- Panels: the color fields */
 .panel {
   position: relative;
-  padding-block: var(--space-2xl);
+  padding-block: var(--section-padding);
   overflow: clip;
   isolation: isolate;
 }
@@ -225,7 +235,7 @@ p {
   color: var(--cream);
 }
 .panel--tight {
-  padding-block: var(--space-xl);
+  padding-block: var(--section-padding-tight);
 }
 
 /* Foreground within ink panels: links/rules flip to cream tints */

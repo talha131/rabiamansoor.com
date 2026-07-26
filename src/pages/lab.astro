@@ -67,8 +67,8 @@ const reviews = [
   hue="emerald"
 >
   <!-- ============================================================ HERO -->
-  <section class="lhero panel--signature" data-parallax-scope>
-    <Contours variant="rings" class="lhero__rings" parallax={0.16} opacity={0.35} color="var(--ink)" />
+  <section class="lhero panel panel--signature" data-parallax-scope>
+    <Contours variant="trapezoid" class="lhero__shape" parallax={0.16} opacity={0.35} color="var(--ink)" />
     <div class="wrap lhero__inner">
       <p class="coord" data-hero-line>Research Station · 02·S</p>
       <h1 data-hero-line>The Lab</h1>
@@ -83,7 +83,7 @@ const reviews = [
   </section>
 
   <!-- =============================================== ACTIVE EXPERIMENT -->
-  <section class="active panel--ink" aria-labelledby="active-h">
+  <section class="active panel panel--ink" aria-labelledby="active-h">
     <div class="wrap">
       <div class="active__head">
         <span class="coord active__tag">
@@ -124,7 +124,7 @@ const reviews = [
   </section>
 
   <!-- ============================================== ARCHIVED EXPERIMENTS -->
-  <section class="archive panel--paper" aria-labelledby="archive-h">
+  <section class="archive panel panel--paper" aria-labelledby="archive-h">
     <div class="wrap">
       <div class="section-head">
         <span class="grid-ref">ARCHIVE</span>
@@ -219,7 +219,7 @@ const reviews = [
   </section>
 
   <!-- ===================================================== PUBLICATIONS -->
-  <section class="pubs panel--emerald" aria-labelledby="pubs-h" data-parallax-scope>
+  <section class="pubs panel panel--emerald" aria-labelledby="pubs-h" data-parallax-scope>
     <Contours variant="ridge" class="pubs__ridge" parallax={0.1} opacity={0.22} color="var(--ink)" />
     <div class="wrap">
       <div class="section-head">
@@ -299,11 +299,6 @@ const reviews = [
 
 <style>
   /* -------------------------------------------------------------- Hero */
-  .lhero {
-    position: relative;
-    padding-block: var(--space-2xl);
-    overflow: clip;
-  }
   .lhero h1 {
     font-size: var(--step-6);
     line-height: 0.9;
@@ -319,7 +314,7 @@ const reviews = [
     max-width: 56ch;
     font-size: var(--step-1);
   }
-  .lhero__rings {
+  :global(.contours.lhero__shape) {
     top: -20%;
     right: -18%;
     left: auto;
@@ -332,7 +327,7 @@ const reviews = [
     margin-bottom: var(--space-xl);
   }
   .active__tag {
-    color: var(--emerald);
+    color: var(--emerald-bright);
   }
   .pulse {
     width: 10px;
@@ -354,7 +349,7 @@ const reviews = [
   .active__topic {
     font-family: var(--font-display);
     font-size: var(--step-2);
-    color: var(--emerald);
+    color: var(--emerald-bright);
     margin-bottom: var(--space-m);
   }
   .active__meta {
@@ -385,7 +380,7 @@ const reviews = [
   .topo__n {
     font-family: var(--font-mono);
     font-size: var(--step-2);
-    color: var(--emerald);
+    color: var(--emerald-bright);
     font-weight: 700;
   }
   .topo h3 { font-size: var(--step-1); }
@@ -393,7 +388,7 @@ const reviews = [
     font-family: var(--font-mono);
     font-size: 0.68rem;
     letter-spacing: 0.04em;
-    color: var(--emerald);
+    color: var(--emerald-bright);
     text-transform: uppercase;
   }
   .topo__body { color: rgba(255, 247, 236, 0.8); font-size: var(--step--1); }
@@ -451,7 +446,6 @@ const reviews = [
   }
 
   /* -------------------------------------------------------- Publications */
-  .pubs { position: relative; }
   .pubs__group { margin-top: var(--space-l); }
   .pubs__label {
     font-family: var(--font-mono);
@@ -466,7 +460,7 @@ const reviews = [
   .pubs__list { display: grid; gap: var(--space-s); }
   .pub {
     padding: var(--space-m);
-    background: rgba(255, 247, 236, 0.5);
+    background: var(--paper);
     border: 1.5px solid var(--ink);
     border-radius: var(--radius-lg);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
