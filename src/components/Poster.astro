@@ -1,0 +1,28 @@
+---
+/* Captioned, optimized film poster for inline use inside article bodies (MDX).
+   Matches the journal's poster aesthetic: 2/3 aspect, rounded, lazy, no CLS. */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  film: string;
+  year: string;
+}
+const { src, film, year } = Astro.props;
+---
+
+<figure class="poster-fig">
+  <Image
+    src={src}
+    alt={`Film poster for ${film} (${year})`}
+    width={300}
+    widths={[200, 300, 456]}
+    sizes="(min-width: 640px) 220px, 44vw"
+    loading="lazy"
+  />
+  <figcaption>
+    <span class="poster-fig__film">{film}</span>
+    <span class="poster-fig__year">{year}</span>
+  </figcaption>
+</figure>
