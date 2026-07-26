@@ -66,9 +66,7 @@ const isProd = import.meta.env.PROD;
           dataLayer.push(arguments);
         }
         gtag('js', new Date());
-        if (navigator.doNotTrack !== '1' && window.doNotTrack !== '1') {
-          gtag('config', GA_ID, { anonymize_ip: true });
-        }
+        gtag('config', GA_ID, { anonymize_ip: true });
       </script>
     </>
   )
