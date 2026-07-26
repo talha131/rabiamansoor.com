@@ -143,7 +143,7 @@ const reviews = [
           <p class="study__full">
             A Eurocentric Analysis of Dystopian Fiction
           </p>
-          <a class="study__read" href="/articles/mphil-collapse-of-multiculturalism/" target="_blank" rel="noopener">
+          <a class="study__read cta-attn" href="/articles/mphil-collapse-of-multiculturalism/" target="_blank" rel="noopener">
             Read the full study <span aria-hidden="true">↗</span>
             <span class="sr-only"> — opens in a new tab</span>
           </a>
@@ -197,7 +197,7 @@ const reviews = [
           <p class="study__full">
             Michael Crichton’s <i>Congo</i> (1980)
           </p>
-          <a class="study__read" href="/articles/ma-crichton-congo/" target="_blank" rel="noopener">
+          <a class="study__read cta-attn" href="/articles/ma-crichton-congo/" target="_blank" rel="noopener">
             Read the full study <span aria-hidden="true">↗</span>
             <span class="sr-only"> — opens in a new tab</span>
           </a>
@@ -253,7 +253,7 @@ const reviews = [
                 <h4 class="pub__title">{p.title}</h4>
                 <p class="pub__body">{p.body}</p>
                 <div class="pub__links">
-                  <a class="pub__read" href={`/articles/${p.slug}/`} target="_blank" rel="noopener">
+                  <a class="pub__read cta-attn" href={`/articles/${p.slug}/`} target="_blank" rel="noopener">
                     Read in full <span aria-hidden="true">↗</span>
                     <span class="sr-only"> — opens in a new tab</span>
                   </a>
@@ -280,7 +280,7 @@ const reviews = [
                 <h4 class="pub__title">{p.title}</h4>
                 <p class="pub__body">{p.body}</p>
                 <div class="pub__links">
-                  <a class="pub__read" href={`/articles/${p.slug}/`} target="_blank" rel="noopener">
+                  <a class="pub__read cta-attn" href={`/articles/${p.slug}/`} target="_blank" rel="noopener">
                     Read in full <span aria-hidden="true">↗</span>
                     <span class="sr-only"> — opens in a new tab</span>
                   </a>
@@ -315,7 +315,7 @@ const reviews = [
               the informal sector (75% of the unskilled migrant workforce).
             </p>
             <div class="pub__links">
-              <a class="pub__read" href="/articles/karachi-world-system-theory/" target="_blank" rel="noopener">
+              <a class="pub__read cta-attn" href="/articles/karachi-world-system-theory/" target="_blank" rel="noopener">
                 Read in full <span aria-hidden="true">↗</span>
                 <span class="sr-only"> — opens in a new tab</span>
               </a>
@@ -527,20 +527,27 @@ const reviews = [
     border-top: 1px solid var(--line-ink);
   }
   .pub__read {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 44px;
+    padding: 0.5em 1.1em;
     font-family: var(--font-mono);
     font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--emerald-deep);
+    color: var(--ink);
+    background: var(--emerald);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
     text-decoration: none;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1),
+      box-shadow 0.3s ease;
   }
   .pub__read:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0 var(--ink);
   }
   .pub__doi {
     display: inline-flex;
@@ -556,19 +563,25 @@ const reviews = [
   .study__read {
     display: inline-flex;
     align-items: center;
-    gap: 0.4em;
-    margin-top: var(--space-s);
+    gap: 0.5em;
+    margin-top: var(--space-m);
     min-height: 44px;
+    padding: 0.55em 1.2em;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--emerald-deep);
+    color: var(--ink);
+    background: var(--emerald);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
     text-decoration: none;
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1),
+      box-shadow 0.3s ease;
   }
   .study__read:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0 var(--ink);
   }
 </style>
