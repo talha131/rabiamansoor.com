@@ -273,6 +273,12 @@ const eras = [
     position: relative;
     width: 3px;
     justify-self: center;
+    /* Inset so the rail runs from the first marker's centre to the last
+       marker's centre rather than beyond both. Top = marker centre offset
+       (constant). Bottom clears the final era's trailing body copy, which is
+       taller on narrow viewports where it wraps to more lines — hence the
+       larger base value, tightened on wider screens (see media query). */
+    margin-block: 30px 285px;
     background: var(--line-cream);
     border-radius: 2px;
   }
@@ -298,7 +304,7 @@ const eras = [
   .era__marker {
     position: absolute;
     left: calc(-1 * var(--space-m) - 28px);
-    top: 0;
+    top: 8px; /* centre the circle beside the year + title cluster */
     width: 44px;
     height: 44px;
     display: grid;
@@ -362,10 +368,13 @@ const eras = [
     letter-spacing: 0.08em;
   }
   .era__range {
+    display: block;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: 0.04em;
     color: var(--amber);
+    margin-bottom: 0.3em;
   }
   .era__body h3 {
     font-size: var(--step-2);
@@ -391,6 +400,9 @@ const eras = [
   @media (min-width: 820px) {
     .scrolly {
       grid-template-columns: 40px 1fr;
+    }
+    .scrolly__rail {
+      margin-block-end: 212px;
     }
     .era__marker {
       left: -40px;
