@@ -19,3 +19,7 @@ npm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# Purged source material (extracted into src/ — never re-add)
+content/
+*.docx
