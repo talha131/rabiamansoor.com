@@ -30,11 +30,16 @@ npm run dev        # http://localhost:4321
 ## Build & preview
 
 ```bash
-npm run build      # → dist/
-npm run preview
+make build         # npm run build → dist/, then verifies the sitemap
+make preview       # serve dist/ locally
+make verify        # re-check an existing dist/ sitemap
 ```
 
-The build must succeed from a clean clone (`npm ci && npm run build`).
+`make build` is what Netlify runs. It builds to `dist/` and then runs
+`scripts/verify-sitemap.mjs`, which **fails the build** if the sitemap is
+missing, stale (its URL set no longer matches the built pages), wrong-origin,
+or missing a valid `lastmod` — so a broken sitemap can never deploy. The build
+must succeed from a clean clone (`npm ci && make build`).
 
 ## Environment variables
 
@@ -48,9 +53,29 @@ Copy `.env.example` → `.env` and fill in as needed.
 ## Deploy to Netlify (one-time setup)
 
 1. **Connect the repository** in Netlify → *Add new site → Import an existing project*.
-2. Build settings are read from `netlify.toml` (command `npm run build`, publish `dist`, Node 22). No manual config needed.
+2. Build settings are read from `netlify.toml` (command `make build`, publish `dist`, Node 22). No manual config needed.
 3. Under **Site configuration → Environment variables**, add `PUBLIC_GA_ID` with the real GA4 ID (and optionally `SITE` for a custom domain).
 4. **Deploy.** Netlify sets long-cache immutable headers for hashed assets and no-cache for HTML (see `netlify.toml`).
+
+## Sitemap & SEO
+
+The sitemap is generated automatically by `@astrojs/sitemap` on every build, so
+it stays in sync with the pages that actually ship — add a page and it appears
+in the next deploy's `/sitemap-index.xml` with no manual step. Every URL carries
+a `<lastmod>`: articles use their `updated` (or `datePublished`) frontmatter
+date; other pages use the build date. `make build` verifies the result and
+**fails the deploy** on any regression (see *Build & preview* above).
+
+- **Origin** — every `<loc>` uses the `SITE` value (default
+  `https://rabiamansoor.com`). If the live domain ever changes, set the `SITE`
+  environment variable in Netlify rather than hard-coding a second value;
+  `robots.txt` and `<link rel="sitemap">` already point at `/sitemap-index.xml`.
+- **Search-engine submission is a one-time human step.** Submit
+  `https://rabiamansoor.com/sitemap-index.xml` once in
+  [Google Search Console](https://search.google.com/search-console) and
+  [Bing Webmaster Tools](https://www.bing.com/webmasters). There is **no** deploy
+  "sitemap ping" — Google removed that endpoint in 2023 and Bing in 2022;
+  crawlers rediscover the sitemap via the `Sitemap:` line in `robots.txt`.
 
 ## Accessibility & resilience
 
