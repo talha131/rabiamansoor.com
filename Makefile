@@ -2,7 +2,7 @@
 # Local development + production build. Netlify runs `make build`.
 
 .DEFAULT_GOAL := help
-.PHONY: help install dev build preview clean
+.PHONY: help install dev build verify preview clean
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -14,8 +14,11 @@ install: ## Install dependencies
 dev: ## Run the local dev server
 	npm run dev
 
-build: ## Build the production site to dist/
-	npm run build
+build: ## Build the production site to dist/ (fails on a broken sitemap)
+	npm run build && node scripts/verify-sitemap.mjs
+
+verify: ## Verify the already-built dist/ sitemap
+	node scripts/verify-sitemap.mjs
 
 preview: ## Serve the production build locally
 	npm run preview
