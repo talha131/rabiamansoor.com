@@ -66,8 +66,7 @@ const personLd = {
 
   <!-- ============================================================ HERO -->
   <section class="ahero panel panel--signature" data-parallax-scope>
-    <Contours variant="rings" class="ahero__rings" parallax={0.16} opacity={0.3} color="var(--rose)" />
-    <Contours variant="route" class="ahero__route" parallax={0.3} opacity={0.4} color="var(--amber)" />
+    <Contours variant="square" class="ahero__shape" parallax={0.16} opacity={0.3} color="var(--rose)" />
     <div class="wrap ahero__inner">
       <p class="coord ahero__eyebrow" data-hero-line>Dossier · 04·N</p>
       <h1 data-hero-line>About Me</h1>
@@ -95,7 +94,7 @@ const personLd = {
 
   <!-- ========================================================== STATS -->
   <section class="astats panel panel--amber" aria-labelledby="stats-h" data-parallax-scope>
-    <Contours variant="ridge" class="astats__ridge" parallax={0.1} opacity={0.22} color="var(--ink)" />
+    <Contours variant="ridge" class="astats__ridge" parallax={0.1} opacity={0.1} color="var(--ink)" />
     <div class="wrap">
       <h2 id="stats-h" class="sr-only">Career at a glance</h2>
       <div class="astats__grid" data-reveal-group>
@@ -220,9 +219,7 @@ const personLd = {
   }
   /* :global + `.contours.<name>` so these reach the Contours root element
      and out-specify its own `.contours { inset: 0 }`. */
-  :global(.contours.ahero__rings) { top: -22%; right: -16%; left: auto; width: 58%; }
-  :global(.contours.ahero__route) { inset: 0 4% 0 auto; width: 34%; display: none; }
-  @media (min-width: 900px) { :global(.contours.ahero__route) { display: block; } }
+  :global(.contours.ahero__shape) { top: -22%; right: -16%; left: auto; width: 58%; }
 
   /* Stats */
   .astats__grid {

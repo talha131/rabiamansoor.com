@@ -77,7 +77,7 @@ const eras = [
 >
   <!-- ============================================================ HERO -->
   <section class="jhero panel panel--signature" data-parallax-scope>
-    <Contours variant="ridge" class="jhero__ridge" parallax={0.16} opacity={0.3} color="var(--ink)" />
+    <Contours variant="diamond" class="jhero__shape" parallax={0.16} opacity={0.32} color="var(--ink)" />
     <div class="wrap jhero__inner">
       <p class="coord" data-hero-line>Field Log · 01·E</p>
       <h1 data-hero-line>Geopolitical<br />Journal</h1>
@@ -207,9 +207,11 @@ const eras = [
     max-width: 54ch;
     font-size: var(--step-1);
   }
-  :global(.contours.jhero__ridge) {
-    inset: auto 0 -10% 0;
-    top: 40%;
+  :global(.contours.jhero__shape) {
+    top: -25%;
+    right: -20%;
+    left: auto;
+    width: 66%;
   }
 
   /* ------------------------------------------------------------- Focus */
