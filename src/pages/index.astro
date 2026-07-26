@@ -240,14 +240,17 @@ const nonHome = NAV.filter((n) => n.href !== '/');
     flex-wrap: wrap;
     gap: var(--space-s);
   }
-  .hero__rings {
+  /* Contours render their own root element (own style scope), so these
+     placement rules must be :global() to reach them, and must out-specify
+     the component's own `.contours { inset: 0 }` — hence `.contours.<name>`. */
+  :global(.contours.hero__rings) {
     top: -30%;
     left: auto;
     right: -20%;
     width: 70%;
     color: var(--ink);
   }
-  .hero__route {
+  :global(.contours.hero__route) {
     inset: 0 0 0 auto;
     width: 40%;
     right: 4%;
@@ -282,7 +285,7 @@ const nonHome = NAV.filter((n) => n.href !== '/');
   }
 
   @media (min-width: 900px) {
-    .hero__route {
+    :global(.contours.hero__route) {
       display: block;
     }
   }
@@ -485,7 +488,7 @@ const nonHome = NAV.filter((n) => n.href !== '/');
   }
 
   /* ---------------------------------------------------------- Highlights */
-  .highlights__ridge {
+  :global(.contours.highlights__ridge) {
     inset: auto 0 0 0;
     top: 30%;
   }
