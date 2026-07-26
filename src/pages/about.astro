@@ -274,7 +274,8 @@ const personLd = {
   }
   .traj__dot {
     position: absolute;
-    left: calc(-1 * var(--space-l) + 1px);
+    /* Centre on the rail: .traj__line left:6px + half its 20px width = 16px. */
+    left: calc(-1 * var(--space-l) + 16px);
     top: 6px;
     width: 18px;
     height: 18px;
