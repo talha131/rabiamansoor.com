@@ -196,6 +196,31 @@ function setupScrolly() {
   });
 }
 
+/* ------------------------------------------------ reading progress bar */
+/* Thin top indicator that tracks reading position on article pages. It is a
+   pure convenience: content is never gated on it, and under reduced-motion it
+   hides entirely (no scrubbing, no scaling). */
+function setupReadingProgress() {
+  const bar = document.querySelector<HTMLElement>('[data-reading-progress]');
+  if (!bar) return;
+  if (reduceMotion()) {
+    bar.style.display = 'none';
+    return;
+  }
+  const article =
+    document.querySelector<HTMLElement>('[data-article-body]') ||
+    document.documentElement;
+  ScrollTrigger.create({
+    trigger: article,
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: true,
+    onUpdate: (self) => {
+      bar.style.transform = `scaleX(${self.progress})`;
+    },
+  });
+}
+
 /* --------------------------------------------------------------- hero fx */
 function setupHero() {
   if (reduceMotion()) return;
@@ -239,6 +264,7 @@ function init() {
   setupCounters();
   setupDraws();
   setupScrolly();
+  setupReadingProgress();
   setupMagnetic();
   ScrollTrigger.refresh();
 }

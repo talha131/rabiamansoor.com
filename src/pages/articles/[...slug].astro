@@ -1,0 +1,522 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import type { HueName } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => !data.draft);
+  const ordered = [...articles].sort((a, b) => a.data.order - b.data.order);
+  return ordered.map((article) => ({
+    params: { slug: article.id },
+    props: { article, all: ordered },
+  }));
+}
+
+const { article, all } = Astro.props;
+const { data } = article;
+const { Content } = await render(article);
+
+// Reading time (~200 wpm) from the raw body. Strip MDX imports/JSX/markdown
+// punctuation so the count reflects actual prose, then round up (min 1).
+const prose = (article.body ?? '')
+  .replace(/^import .*$/gm, '')
+  .replace(/<[^>]+>/g, ' ')
+  .replace(/[#>*_`~\-]/g, ' ');
+const words = prose.split(/\s+/).filter(Boolean).length;
+const readingTime = Math.max(1, Math.round(words / 200));
+
+// Prev / next within the same kind — a gentle "more like this" pager.
+const sameKind = all.filter((a) => a.data.kind === data.kind);
+const idx = sameKind.findIndex((a) => a.id === article.id);
+const prev = idx > 0 ? sameKind[idx - 1] : null;
+const next = idx >= 0 && idx < sameKind.length - 1 ? sameKind[idx + 1] : null;
+
+// Eyebrow label for the article kind.
+const KIND_FALLBACK: Record<string, string> = {
+  dispatch: 'Dispatch',
+  'peer-reviewed': 'Peer-Reviewed Publication',
+  'book-review': 'Book Review',
+  'book-chapter': 'Book Chapter',
+  thesis: 'Thesis',
+};
+const eyebrow = data.kindLabel ?? KIND_FALLBACK[data.kind];
+
+// Meta row cells (venue · date · reading time), skipping the empty ones.
+const metaCells = [data.venue, data.date, `${readingTime} min read`].filter(
+  Boolean
+) as string[];
+
+// External reference (published journal / book), kept distinct from the on-site
+// full text the reader is already on.
+const externalHref = data.doi ?? null;
+const externalLabel = data.doi
+  ? data.doi.replace('https://', '')
+  : data.isbn
+    ? `ISBN ${data.isbn}`
+    : null;
+
+const back = data.backTo ?? { label: 'the Journal', href: '/journal/' };
+
+// SEO: description = subtitle, else the first sentence of the body prose.
+const firstSentence = prose
+  .replace(/\s+/g, ' ')
+  .trim()
+  .split(/(?<=[.!?])\s/)[0];
+const description = (data.subtitle ?? firstSentence ?? '').slice(0, 300);
+
+const hue = data.hue as HueName;
+---
+
+<BaseLayout title={data.title} description={description} hue={hue}>
+  <div
+    class="reading-progress"
+    data-reading-progress
+    aria-hidden="true"
+  >
+  </div>
+
+  <article class="article">
+    <!-- ===================================================== HEADER -->
+    <header class="article__header panel panel--paper">
+      <div class="wrap article__header-inner">
+        <span class="article__accent" aria-hidden="true"></span>
+        <p class="coord article__kind" data-reveal>{eyebrow}</p>
+        <h1 class="article__title" data-reveal>{data.title}</h1>
+        {
+          data.subtitle && (
+            <p class="article__subtitle" data-reveal>
+              {data.subtitle}
+            </p>
+          )
+        }
+        <div class="article__meta" data-reveal>
+          <ul class="article__meta-list" role="list">
+            {metaCells.map((cell) => <li>{cell}</li>)}
+          </ul>
+          {
+            externalHref && externalLabel && (
+              <a
+                class="article__doi"
+                href={externalHref}
+                target="_blank"
+                rel="noopener"
+              >
+                {externalLabel} ↗
+              </a>
+            )
+          }
+          {
+            !externalHref && externalLabel && (
+              <span class="article__doi article__doi--static">
+                {externalLabel}
+              </span>
+            )
+          }
+        </div>
+        {
+          data.impact && (
+            <p class="article__impact" data-reveal>
+              {data.impact}
+            </p>
+          )
+        }
+      </div>
+    </header>
+
+    <!-- ======================================================= BODY -->
+    <div class="article__body-wrap panel panel--paper panel--tight">
+      <div class="article__body prose" data-article-body>
+        {
+          data.heroImage && (
+            <figure class="article__hero-figure">
+              <Image
+                src={data.heroImage}
+                alt={data.title}
+                widths={[480, 800, 1200]}
+                sizes="(min-width: 720px) 720px, 92vw"
+                loading="eager"
+              />
+            </figure>
+          )
+        }
+        {
+          data.fields && data.fields.length > 0 && (
+            <ul class="article__fields" role="list">
+              {data.fields.map((f) => (
+                <li>{f}</li>
+              ))}
+            </ul>
+          )
+        }
+        <Content />
+      </div>
+    </div>
+
+    <!-- ===================================================== FOOTER -->
+    <footer class="article__footer panel panel--paper-2 panel--tight">
+      <div class="wrap article__footer-inner">
+        <a class="article__back link" href={back.href}>
+          ← Back to {back.label}
+        </a>
+        {
+          externalHref && externalLabel && (
+            <a
+              class="btn btn--ghost"
+              href={externalHref}
+              target="_blank"
+              rel="noopener"
+            >
+              View at source <span class="arrow">↗</span>
+            </a>
+          )
+        }
+      </div>
+
+      {
+        (prev || next) && (
+          <nav class="article__pager wrap" aria-label="More in this series">
+            {prev ? (
+              <a class="article__pager-link article__pager-link--prev" href={`/articles/${prev.id}/`}>
+                <span class="article__pager-dir">← Previous</span>
+                <span class="article__pager-title">{prev.data.title}</span>
+              </a>
+            ) : (
+              <span />
+            )}
+            {next ? (
+              <a class="article__pager-link article__pager-link--next" href={`/articles/${next.id}/`}>
+                <span class="article__pager-dir">Next →</span>
+                <span class="article__pager-title">{next.data.title}</span>
+              </a>
+            ) : (
+              <span />
+            )}
+          </nav>
+        )
+      }
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  /* ------------------------------------------------- reading progress */
+  .reading-progress {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 3px;
+    z-index: 150;
+    background: var(--signature);
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  /* --------------------------------------------------------- article */
+  .article {
+    --measure: 68ch;
+  }
+
+  /* Header: a calm paper header with a bold hue accent bar. */
+  .article__header {
+    padding-block: var(--space-xl) var(--space-l);
+  }
+  .article__header-inner {
+    max-width: 74ch;
+  }
+  .article__accent {
+    display: block;
+    width: 72px;
+    height: 6px;
+    background: var(--signature);
+    border-radius: 999px;
+    margin-bottom: var(--space-m);
+  }
+  .article__kind {
+    color: var(--signature-deep);
+    margin-bottom: var(--space-s);
+  }
+  .article__title {
+    font-size: var(--step-4);
+    line-height: 1.04;
+    margin-bottom: 0.35em;
+  }
+  .article__subtitle {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--step-2);
+    color: var(--ink-soft);
+    line-height: 1.25;
+    max-width: 60ch;
+  }
+  .article__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s) var(--space-m);
+    margin-top: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line-ink);
+  }
+  .article__meta-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em 0.9em;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+  }
+  .article__meta-list li {
+    display: inline-flex;
+    align-items: center;
+  }
+  .article__meta-list li + li::before {
+    content: '·';
+    margin-right: 0.9em;
+    color: var(--signature-deep);
+  }
+  .article__doi {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 700;
+    color: var(--signature-deep);
+    text-underline-offset: 3px;
+    word-break: break-word;
+  }
+  .article__doi--static {
+    color: var(--ink-soft);
+  }
+  .article__impact {
+    margin-top: var(--space-s);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--emerald-deep);
+  }
+
+  /* Body: the reading column proper. */
+  .article__body-wrap {
+    padding-top: var(--space-l);
+  }
+  .article__body {
+    width: min(100% - 2 * var(--space-m), var(--measure));
+    margin-inline: auto;
+    font-size: var(--article-step, clamp(1.075rem, 1rem + 0.45vw, 1.28rem));
+    line-height: 1.78;
+  }
+
+  .article__fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-bottom: var(--space-l);
+    padding-bottom: var(--space-m);
+    border-bottom: 1px solid var(--line-ink);
+  }
+  .article__fields li {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.4em 0.8em;
+    border: 1.5px solid var(--signature);
+    border-radius: 999px;
+    color: var(--ink);
+  }
+
+  .article__hero-figure {
+    margin-bottom: var(--space-l);
+  }
+  .article__hero-figure :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+  }
+
+  /* ---- rendered markdown body typography (scoped, global children) ---- */
+  .article__body :global(p) {
+    margin-block: 0 1.3em;
+    color: inherit;
+  }
+  .article__body :global(h2) {
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: var(--step-2);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-top: 1.8em;
+    margin-bottom: 0.5em;
+    text-wrap: balance;
+  }
+  .article__body :global(h3) {
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: var(--step-1);
+    line-height: 1.15;
+    margin-top: 1.5em;
+    margin-bottom: 0.4em;
+  }
+  .article__body :global(a) {
+    color: var(--signature-deep);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+  }
+  .article__body :global(strong) {
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .article__body :global(em),
+  .article__body :global(i) {
+    font-style: italic;
+  }
+  .article__body :global(ul),
+  .article__body :global(ol) {
+    margin-block: 0 1.4em;
+    padding-left: 1.2em;
+    display: grid;
+    gap: 0.7em;
+  }
+  .article__body :global(li) {
+    padding-left: 0.3em;
+  }
+  .article__body :global(li)::marker {
+    color: var(--signature-deep);
+  }
+  .article__body :global(blockquote) {
+    margin: 1.6em 0;
+    padding-left: var(--space-m);
+    border-left: 3px solid var(--signature);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .article__body :global(hr) {
+    border: none;
+    border-top: 1px solid var(--line-ink);
+    margin: var(--space-l) 0;
+  }
+
+  /* Drop-cap on the first paragraph — a quiet editorial flourish. Guarded so
+     it never triggers on small screens or under reduced motion. */
+  @media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
+    .article__body > :global(p:first-of-type::first-letter) {
+      float: left;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 3.6em;
+      line-height: 0.82;
+      padding-right: 0.08em;
+      margin-top: 0.05em;
+      color: var(--signature-deep);
+    }
+  }
+
+  /* Inline poster figures (from MDX <Poster>). */
+  .article__body :global(.poster-fig) {
+    margin: var(--space-m) 0;
+    width: clamp(150px, 46%, 220px);
+  }
+  .article__body :global(.poster-row) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    margin: var(--space-l) 0;
+  }
+  .article__body :global(.poster-row .poster-fig) {
+    margin: 0;
+    width: clamp(140px, 30%, 190px);
+  }
+  .article__body :global(.poster-fig img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: var(--radius);
+    box-shadow: 0 14px 30px rgba(20, 27, 51, 0.22);
+  }
+  .article__body :global(.poster-fig figcaption) {
+    display: grid;
+    margin-top: 0.5em;
+    line-height: 1.2;
+  }
+  .article__body :global(.poster-fig__film) {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.92rem;
+  }
+  .article__body :global(.poster-fig__year) {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    color: var(--signature-deep);
+  }
+
+  /* --------------------------------------------------------- footer */
+  .article__footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+  }
+  .article__back {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--signature-deep);
+    text-decoration: none;
+  }
+  .article__back:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .article__pager {
+    display: grid;
+    gap: var(--space-s);
+    margin-top: var(--space-l);
+    grid-template-columns: 1fr;
+  }
+  .article__pager-link {
+    display: grid;
+    gap: 0.3em;
+    padding: var(--space-s) var(--space-m);
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .article__pager-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 6px 6px 0 var(--signature);
+  }
+  .article__pager-link--next {
+    text-align: right;
+  }
+  .article__pager-dir {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--signature-deep);
+  }
+  .article__pager-title {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    line-height: 1.2;
+  }
+
+  @media (min-width: 720px) {
+    .article__pager {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-m);
+    }
+  }
+</style>
