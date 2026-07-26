@@ -8,6 +8,8 @@ import {
   ORCID_URL,
   type HueName,
 } from '../../lib/site';
+import { readingMinutes } from '../../lib/reading';
+import { toBibtex, formatCitation } from '../../lib/cite';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles', ({ data }) => !data.draft);
@@ -24,12 +26,11 @@ const { Content } = await render(article);
 
 // Reading time (~200 wpm) from the raw body. Strip MDX imports/JSX/markdown
 // punctuation so the count reflects actual prose, then round up (min 1).
+const readingTime = readingMinutes(article.body);
 const prose = (article.body ?? '')
   .replace(/^import .*$/gm, '')
   .replace(/<[^>]+>/g, ' ')
   .replace(/[#>*_`~\-]/g, ' ');
-const words = prose.split(/\s+/).filter(Boolean).length;
-const readingTime = Math.max(1, Math.round(words / 200));
 
 // Prev / next within the same kind — a gentle "more like this" pager.
 const sameKind = all.filter((a) => a.data.kind === data.kind);
@@ -72,9 +73,25 @@ const description = (data.subtitle ?? firstSentence ?? '').slice(0, 300);
 
 const hue = data.hue as HueName;
 
+// --------------------------------------------------------- Citation
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const citeInput = {
+  slug: article.id,
+  title: data.title,
+  kind: data.kind,
+  kindLabel: data.kindLabel,
+  venue: data.venue,
+  date: data.date,
+  datePublished: data.datePublished,
+  doi: data.doi,
+  isbn: data.isbn,
+  url: canonical,
+};
+const bibtex = toBibtex(citeInput);
+const citation = formatCitation(citeInput);
+
 // ------------------------------------------------------------ JSON-LD
 // Scholarly pieces get ScholarlyArticle; the journal dispatch gets Article.
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const isJES = data.venue === 'Journal of European Studies';
 const jsonLd: Record<string, unknown> = {
   '@context': 'https://schema.org',
@@ -130,7 +147,7 @@ const jsonLd: Record<string, unknown> = {
   <article class="article">
     <!-- ===================================================== HEADER -->
     <header class="article__header panel panel--paper">
-      <div class="wrap article__header-inner">
+      <div class="article__col article__header-inner">
         <span class="article__accent" aria-hidden="true"></span>
         <p class="coord article__kind" data-reveal>{eyebrow}</p>
         <h1 class="article__title" data-reveal>{data.title}</h1>
@@ -175,9 +192,24 @@ const jsonLd: Record<string, unknown> = {
       </div>
     </header>
 
-    <!-- ======================================================= BODY -->
-    <div class="article__body-wrap panel panel--paper panel--tight">
-      <div class="article__body prose" data-article-body>
+    <!-- ================================================ CITE + BODY -->
+    <div class="article__content panel panel--paper panel--tight">
+      <!-- Cite this work -->
+      <aside class="article__col article__cite" data-cite aria-label="Cite this work">
+        <div class="article__cite-top">
+          <span class="coord article__cite-eyebrow">Cite this work</span>
+          <button class="article__cite-btn" type="button" data-cite-copy>
+            <span class="article__cite-btn-label">Copy BibTeX</span>
+            <span class="article__cite-btn-icon" aria-hidden="true">⧉</span>
+          </button>
+        </div>
+        <p class="article__cite-text">{citation}</p>
+        <span class="sr-only" role="status" data-cite-status></span>
+        <script type="application/x-bibtex" is:inline data-cite-bibtex set:html={bibtex}
+        ></script>
+      </aside>
+
+      <div class="article__body prose article__col" data-article-body>
         {
           data.heroImage && (
             <figure class="article__hero-figure">
@@ -248,6 +280,54 @@ const jsonLd: Record<string, unknown> = {
       }
     </footer>
   </article>
+
+  <script>
+    // Copy-BibTeX interaction. Progressive: the citation text is always
+    // visible; this only upgrades the button to a one-click copy. Re-inits on
+    // every Astro View Transition navigation.
+    function initCite() {
+      const box = document.querySelector<HTMLElement>('[data-cite]');
+      if (!box) return;
+      const btn = box.querySelector<HTMLButtonElement>('[data-cite-copy]');
+      const payload = box.querySelector<HTMLElement>('[data-cite-bibtex]');
+      const label = box.querySelector<HTMLElement>('.article__cite-btn-label');
+      const status = box.querySelector<HTMLElement>('[data-cite-status]');
+      if (!btn || !payload || !label) return;
+      const original = label.textContent;
+      let resetTimer: number | undefined;
+
+      btn.addEventListener('click', async () => {
+        const text = payload.textContent ?? '';
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          // Fallback for browsers/contexts without the async clipboard API.
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand('copy');
+          } catch {
+            /* give up quietly — the citation text is still on-screen */
+          }
+          ta.remove();
+        }
+        label.textContent = 'Copied ✓';
+        btn.classList.add('is-copied');
+        if (status) status.textContent = 'BibTeX copied to clipboard';
+        window.clearTimeout(resetTimer);
+        resetTimer = window.setTimeout(() => {
+          label.textContent = original;
+          btn.classList.remove('is-copied');
+          if (status) status.textContent = '';
+        }, 2400);
+      });
+    }
+    document.addEventListener('astro:page-load', initCite);
+  </script>
 </BaseLayout>
 
 <style>
@@ -268,13 +348,16 @@ const jsonLd: Record<string, unknown> = {
   .article {
     --measure: 68ch;
   }
+  /* One shared reading column so the header, citation card and body share the
+     exact same left edge (Medium-style single column). */
+  .article__col {
+    width: min(100% - 2 * var(--space-m), var(--measure));
+    margin-inline: auto;
+  }
 
   /* Header: a calm paper header with a bold hue accent bar. */
   .article__header {
-    padding-block: var(--space-xl) var(--space-l);
-  }
-  .article__header-inner {
-    max-width: 74ch;
+    padding-block: var(--space-xl) var(--space-m);
   }
   .article__accent {
     display: block;
@@ -348,15 +431,71 @@ const jsonLd: Record<string, unknown> = {
     color: var(--emerald-deep);
   }
 
-  /* Body: the reading column proper. */
-  .article__body-wrap {
+  /* Content region holds the citation card + the reading column proper. */
+  .article__content {
     padding-top: var(--space-l);
   }
   .article__body {
-    width: min(100% - 2 * var(--space-m), var(--measure));
-    margin-inline: auto;
     font-size: var(--article-step, clamp(1.075rem, 1rem + 0.45vw, 1.28rem));
     line-height: 1.78;
+  }
+
+  /* Cite this work — a cartographic instrument card above the body. */
+  .article__cite {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-m);
+    background: var(--paper-2);
+    border: 1.5px solid var(--ink);
+    border-left: 4px solid var(--signature);
+    border-radius: var(--radius-lg);
+  }
+  .article__cite-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    margin-bottom: var(--space-s);
+  }
+  .article__cite-eyebrow {
+    color: var(--signature-deep);
+  }
+  .article__cite-text {
+    font-size: var(--step--1);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: none;
+  }
+  .article__cite-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    min-height: 44px;
+    padding: 0.5em 1.1em;
+    background: var(--ink);
+    color: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1),
+      background 0.25s ease, color 0.25s ease;
+  }
+  .article__cite-btn:hover {
+    transform: translateY(-2px);
+  }
+  .article__cite-btn.is-copied {
+    background: var(--signature);
+    color: var(--on-signature);
+    border-color: var(--signature);
+  }
+  .article__cite-btn-icon {
+    font-size: 1.05em;
+    line-height: 1;
   }
 
   .article__fields {
