@@ -59,7 +59,7 @@ const signature = [
   hue="indigo"
 >
   <!-- ============================================================ HERO -->
-  <section class="chero panel--signature" data-parallax-scope>
+  <section class="chero panel panel--signature" data-parallax-scope>
     <Contours variant="rings" class="chero__rings" parallax={0.16} opacity={0.28} color="var(--cream)" />
     <div class="wrap chero__inner">
       <p class="coord" data-hero-line>Seminar Room · 03·W</p>
@@ -73,7 +73,7 @@ const signature = [
   </section>
 
   <!-- ==================================================== PHILOSOPHY -->
-  <section class="philosophy panel--paper" aria-labelledby="phil-h">
+  <section class="philosophy panel panel--paper" aria-labelledby="phil-h">
     <div class="wrap philosophy__grid">
       <div class="philosophy__body">
         <div class="section-head">
@@ -113,7 +113,7 @@ const signature = [
   </section>
 
   <!-- ======================================================= CATALOG -->
-  <section class="catalog panel--ink" aria-labelledby="cat-h" data-parallax-scope>
+  <section class="catalog panel panel--ink" aria-labelledby="cat-h" data-parallax-scope>
     <Contours variant="ridge" class="catalog__ridge" parallax={0.12} opacity={0.16} color="var(--indigo)" />
     <div class="wrap">
       <div class="section-head">
@@ -140,7 +140,7 @@ const signature = [
   </section>
 
   <!-- =============================================== SIGNATURE COURSES -->
-  <section class="signature panel--indigo" aria-labelledby="sig-h">
+  <section class="signature panel panel--indigo" aria-labelledby="sig-h">
     <div class="wrap">
       <div class="section-head">
         <span class="coord signature__coord">Signature courses</span>
@@ -169,11 +169,6 @@ const signature = [
 </BaseLayout>
 
 <style>
-  .chero {
-    position: relative;
-    padding-block: var(--space-2xl);
-    overflow: clip;
-  }
   .chero h1 {
     font-size: var(--step-6);
     line-height: 0.9;
@@ -246,7 +241,6 @@ const signature = [
   }
 
   /* Catalog */
-  .catalog { position: relative; }
   .catalog__coord { color: var(--indigo); }
   .catalog .grid-ref { color: rgba(108, 92, 231, 0.8); }
   .catalog__grid {
