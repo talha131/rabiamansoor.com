@@ -2,8 +2,9 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 /* Long-form reading pages ("Medium-style"). Each article's body is the verbatim
-   full text (source of truth: content/articles-source.md). Frontmatter carries
-   the bibliographic metadata that drives the header, SEO and JSON-LD. */
+   full text (source of truth: the Markdown files in src/content/articles/).
+   Frontmatter carries the bibliographic metadata that drives the header, SEO
+   and JSON-LD. */
 const articles = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/articles' }),
   schema: ({ image }) =>
