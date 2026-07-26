@@ -1,0 +1,196 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Contours from '../../components/Contours.astro';
+import { readingMinutes } from '../../lib/reading';
+
+const KIND_LABEL: Record<string, string> = {
+  dispatch: 'Dispatch',
+  'peer-reviewed': 'Peer-Reviewed',
+  'book-review': 'Book Review',
+  'book-chapter': 'Book Chapter',
+  thesis: 'Thesis',
+};
+
+const raw = await getCollection('articles', ({ data }) => !data.draft);
+
+const yearOf = (d: (typeof raw)[number]) => {
+  if (d.data.datePublished) return parseInt(d.data.datePublished.slice(0, 4));
+  const m = (d.data.date ?? '').match(/\d{4}/);
+  return m ? parseInt(m[0]) : 0;
+};
+
+const entries = raw
+  .map((a) => ({
+    id: a.id,
+    data: a.data,
+    year: yearOf(a),
+    dateSort: a.data.datePublished ?? String(yearOf(a)),
+    readingTime: readingMinutes(a.body),
+  }))
+  // Newest first; stable tiebreak by defined order.
+  .sort(
+    (a, b) =>
+      b.year - a.year ||
+      b.dateSort.localeCompare(a.dateSort) ||
+      a.data.order - b.data.order
+  );
+
+const deep = (hue: string) => (hue === 'ink' ? 'var(--ink)' : `var(--${hue}-deep)`);
+---
+
+<BaseLayout
+  title="Writing"
+  description="The complete index of Rabia Mansoor's writing — dispatches, peer-reviewed papers, book reviews, a book chapter and theses — newest first."
+  hue="rose"
+>
+  <!-- ============================================================ HERO -->
+  <section class="whero panel panel--signature" data-parallax-scope>
+    <Contours variant="route" class="whero__shape" parallax={0.16} opacity={0.3} color="var(--ink)" />
+    <div class="wrap whero__inner">
+      <p class="coord" data-hero-line>Complete index · 05·E</p>
+      <h1 data-hero-line>Writing</h1>
+      <p class="whero__sub" data-hero-line>Every dispatch, paper &amp; study — newest first</p>
+      <p class="whero__intro prose" data-hero-line>
+        The full record of published and archived work — from real-time
+        geopolitical dispatches to peer-reviewed papers, book reviews, a book
+        chapter, and the foundational theses. Each opens as a full reading page.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========================================================= INDEX -->
+  <section class="windex panel panel--paper" aria-labelledby="windex-h">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="grid-ref">{entries.length} entries</span>
+        <span class="coord">Chronological</span>
+        <h2 id="windex-h" data-reveal>The complete index</h2>
+      </div>
+
+      <ol class="windex__list" role="list" data-reveal-group>
+        {
+          entries.map((e) => (
+            <li
+              class="windex__item"
+              data-reveal-item
+              style={`--accent:var(--${e.data.hue}); --accent-deep:${deep(e.data.hue)};`}
+            >
+              <a class="windex__link" href={`/articles/${e.id}/`}>
+                <div class="windex__top">
+                  <span class="windex__kind">{e.data.kindLabel ?? KIND_LABEL[e.data.kind]}</span>
+                  {e.year > 0 && <span class="windex__year">{e.year}</span>}
+                </div>
+                <h3 class="windex__title">{e.data.title}</h3>
+                {e.data.subtitle && <p class="windex__sub">{e.data.subtitle}</p>}
+                <p class="windex__meta">
+                  {[e.data.venue, `${e.readingTime} min read`]
+                    .filter(Boolean)
+                    .join('  ·  ')}
+                  <span class="windex__cta" aria-hidden="true">Read →</span>
+                </p>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* -------------------------------------------------------------- Hero */
+  .whero h1 {
+    font-size: var(--step-6);
+    line-height: 0.9;
+    margin: 0.1em 0 0.1em;
+  }
+  .whero__sub {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-2);
+  }
+  .whero__intro {
+    margin-top: var(--space-m);
+    max-width: 58ch;
+    font-size: var(--step-1);
+  }
+  :global(.contours.whero__shape) {
+    top: -30%;
+    right: -12%;
+    left: auto;
+    width: 48%;
+  }
+
+  /* ------------------------------------------------------------- Index */
+  .windex__list {
+    display: grid;
+    gap: var(--space-s);
+  }
+  .windex__item {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-left: 5px solid var(--accent);
+    border-radius: var(--radius-lg);
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1),
+      box-shadow 0.3s ease;
+  }
+  .windex__item:hover {
+    transform: translateY(-4px);
+    box-shadow: 8px 8px 0 var(--accent);
+  }
+  .windex__link {
+    display: grid;
+    gap: 0.35em;
+    padding: var(--space-m);
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .windex__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5em;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .windex__kind {
+    color: var(--accent-deep);
+  }
+  .windex__year {
+    color: var(--ink-soft);
+  }
+  .windex__title {
+    font-size: var(--step-2);
+    line-height: 1.1;
+  }
+  .windex__sub {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    line-height: 1.25;
+  }
+  .windex__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5em 1em;
+    margin-top: 0.3em;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .windex__cta {
+    margin-left: auto;
+    color: var(--accent-deep);
+    font-weight: 700;
+    transition: transform 0.3s ease;
+  }
+  .windex__link:hover .windex__cta {
+    transform: translateX(4px);
+  }
+</style>

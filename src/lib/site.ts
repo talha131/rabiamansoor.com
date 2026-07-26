@@ -27,6 +27,7 @@ export const NAV: NavItem[] = [
   { label: 'Home', href: '/', hue: 'rose', ref: '00·N' },
   { label: 'Journal', href: '/journal/', hue: 'amber', ref: '01·E' },
   { label: 'The Lab', href: '/lab/', hue: 'emerald', ref: '02·S' },
+  { label: 'Writing', href: '/articles/', hue: 'rose', ref: '05·E' },
   { label: 'Classroom', href: '/classroom/', hue: 'indigo', ref: '03·W' },
   { label: 'About', href: '/about/', hue: 'ink', ref: '04·N' },
 ];
