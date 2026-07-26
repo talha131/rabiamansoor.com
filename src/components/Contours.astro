@@ -4,10 +4,10 @@
 
    Each page's hero uses a DISTINCT nested-outline shape so the pages read
    apart at a glance: rings (home), diamond (journal), trapezoid (lab),
-   hexagon (classroom), square (about). ridge/route are shared line motifs
-   used for secondary section decoration. */
+   hexagon (classroom), square (about), pentagon (writing). ridge/route are
+   shared line motifs used for secondary section decoration. */
 interface Props {
-  variant?: 'rings' | 'diamond' | 'trapezoid' | 'hexagon' | 'square' | 'ridge' | 'route';
+  variant?: 'rings' | 'diamond' | 'trapezoid' | 'hexagon' | 'square' | 'pentagon' | 'ridge' | 'route';
   class?: string;
   parallax?: number | null;
   opacity?: number;
@@ -41,6 +41,15 @@ const trapPts = (r: number) =>
 // Flat-top hexagon.
 const hexPts = (r: number) =>
   [30, 90, 150, 210, 270, 330]
+    .map((a) => {
+      const rad = (a * Math.PI) / 180;
+      return `${(CX + r * Math.cos(rad)).toFixed(1)},${(CY + r * Math.sin(rad)).toFixed(1)}`;
+    })
+    .join(' ');
+
+// Point-up pentagon.
+const pentaPts = (r: number) =>
+  [-90, -18, 54, 126, 198]
     .map((a) => {
       const rad = (a * Math.PI) / 180;
       return `${(CX + r * Math.cos(rad)).toFixed(1)},${(CY + r * Math.sin(rad)).toFixed(1)}`;
@@ -89,6 +98,16 @@ const hexPts = (r: number) =>
       <svg viewBox="0 0 400 400" fill="none" preserveAspectRatio="xMidYMid meet">
         {R.map((r, i) => (
           <polygon points={hexPts(r)} stroke={color} stroke-width={weight(i)} stroke-dasharray={dash(i)} stroke-linejoin="round" />
+        ))}
+        <circle cx={CX} cy={CY} r="3" fill={color} stroke="none" />
+      </svg>
+    )
+  }
+  {
+    variant === 'pentagon' && (
+      <svg viewBox="0 0 400 400" fill="none" preserveAspectRatio="xMidYMid meet">
+        {R.map((r, i) => (
+          <polygon points={pentaPts(r)} stroke={color} stroke-width={weight(i)} stroke-dasharray={dash(i)} stroke-linejoin="round" />
         ))}
         <circle cx={CX} cy={CY} r="3" fill={color} stroke="none" />
       </svg>

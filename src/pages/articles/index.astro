@@ -46,7 +46,7 @@ const deep = (hue: string) => (hue === 'ink' ? 'var(--ink)' : `var(--${hue}-deep
 >
   <!-- ============================================================ HERO -->
   <section class="whero panel panel--signature" data-parallax-scope>
-    <Contours variant="route" class="whero__shape" parallax={0.16} opacity={0.3} color="var(--ink)" />
+    <Contours variant="pentagon" class="whero__shape" parallax={0.16} opacity={0.32} color="var(--ink)" />
     <div class="wrap whero__inner">
       <p class="coord" data-hero-line>Complete index · 05·E</p>
       <h1 data-hero-line>Writing</h1>
@@ -116,10 +116,10 @@ const deep = (hue: string) => (hue === 'ink' ? 'var(--ink)' : `var(--${hue}-deep
     font-size: var(--step-1);
   }
   :global(.contours.whero__shape) {
-    top: -30%;
-    right: -12%;
+    top: -22%;
+    right: -16%;
     left: auto;
-    width: 48%;
+    width: 58%;
   }
 
   /* ------------------------------------------------------------- Index */
