@@ -97,6 +97,12 @@ ol[role='list'] {
   --space-xl: clamp(4rem, 3rem + 5vw, 7.5rem);
   --space-2xl: clamp(6rem, 4rem + 8vw, 11rem);
 
+  /* Section rhythm — the vertical padding every color panel gets. Change
+     these two values to tune the breathing room between sections across
+     the whole site. */
+  --section-padding: clamp(3rem, 2rem + 3vw, 5.5rem);
+  --section-padding-tight: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+
   --measure: 62ch;
   --radius: 4px;
   --radius-lg: 10px;
@@ -187,7 +193,7 @@ p {
 /* --------------------------------------------- Panels: the color fields */
 .panel {
   position: relative;
-  padding-block: var(--space-2xl);
+  padding-block: var(--section-padding);
   overflow: clip;
   isolation: isolate;
 }
@@ -225,7 +231,7 @@ p {
   color: var(--cream);
 }
 .panel--tight {
-  padding-block: var(--space-xl);
+  padding-block: var(--section-padding-tight);
 }
 
 /* Foreground within ink panels: links/rules flip to cream tints */
