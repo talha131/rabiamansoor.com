@@ -324,12 +324,22 @@ const personLd = {
   .horizon p { font-size: var(--step--1); color: rgba(255, 247, 236, 0.85); }
   .horizon__links {
     display: flex;
-    gap: var(--space-m);
+    flex-wrap: wrap;
+    gap: 0 var(--space-m);
     margin-top: 0.4em;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
   }
-  .horizon__links a { color: var(--amber); text-underline-offset: 3px; }
+  .horizon__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-block: 0.4em;
+    color: var(--amber);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-underline-offset: 3px;
+  }
   @media (min-width: 820px) {
     .closer__grid { grid-template-columns: 1.6fr 1fr; gap: var(--space-xl); align-items: start; }
   }
