@@ -32,6 +32,9 @@ const library = [
 const marquee = [...library, ...library];
 
 const nonHome = NAV.filter((n) => n.href !== '/');
+// Spell the tile count so the heading tracks NAV instead of drifting out of sync.
+const COUNT_WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+const territoryCount = COUNT_WORDS[nonHome.length] ?? String(nonHome.length);
 ---
 
 <BaseLayout title="Rabia Mansoor" hue="rose">
@@ -139,7 +142,7 @@ const nonHome = NAV.filter((n) => n.href !== '/');
       <div class="section-head">
         <span class="grid-ref">FIG. 02</span>
         <span class="coord">Chart a course</span>
-        <h2 id="explore-h" data-reveal>Four territories</h2>
+        <h2 id="explore-h" data-reveal>{territoryCount} territories</h2>
       </div>
 
       <ul class="explore__grid" role="list" data-reveal-group>
