@@ -21,13 +21,14 @@ export interface NavItem {
   href: string;
   hue: HueName;
   ref: string; // cartographic grid reference
+  blurb?: string; // one-line description for the homepage tiles
 }
 
 export const NAV: NavItem[] = [
   { label: 'Home', href: '/', hue: 'rose', ref: '00·N' },
-  { label: 'Journal', href: '/journal/', hue: 'amber', ref: '01·E' },
-  { label: 'The Lab', href: '/lab/', hue: 'emerald', ref: '02·S' },
-  { label: 'Writing', href: '/articles/', hue: 'rose', ref: '05·E' },
-  { label: 'Classroom', href: '/classroom/', hue: 'indigo', ref: '03·W' },
+  { label: 'Journal', href: '/journal/', hue: 'amber', ref: '01·E', blurb: 'Dispatches on narrative & power' },
+  { label: 'The Lab', href: '/lab/', hue: 'emerald', ref: '02·S', blurb: 'Narrative topographies & research' },
+  { label: 'Writing', href: '/articles/', hue: 'rose', ref: '05·E', blurb: 'Teaching philosophy & certifications' },
+  { label: 'Classroom', href: '/classroom/', hue: 'indigo', ref: '03·W', blurb: 'The résumé — bio, trajectory & grants' },
   { label: 'About', href: '/about/', hue: 'ink', ref: '04·N' },
 ];
