@@ -138,19 +138,12 @@ const nonHome = NAV.filter((n) => n.href !== '/');
 
       <ul class="explore__grid" role="list" data-reveal-group>
         {
-          nonHome.map((item, i) => (
+          nonHome.map((item) => (
             <li data-reveal-item>
               <a class="tile" href={item.href} data-hue={item.hue}>
                 <span class="tile__ref">{item.ref}</span>
                 <span class="tile__name">{item.label}</span>
-                <span class="tile__desc">
-                  {[
-                    'Dispatches on narrative & power',
-                    'Narrative topographies & research',
-                    'Teaching philosophy & certifications',
-                    'The résumé — bio, trajectory & grants',
-                  ][i]}
-                </span>
+                <span class="tile__desc">{item.blurb}</span>
                 <span class="tile__go" aria-hidden="true">→</span>
               </a>
             </li>
