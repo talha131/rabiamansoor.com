@@ -49,7 +49,11 @@ import { NAV, SCHOLAR_URL, ORCID_URL, DEVELOPER } from '../lib/site';
 
 <style>
   .footer {
-    padding-block: var(--space-xl) var(--space-l);
+    /* Bottom inset is ADDED (home indicator sits below the existing padding);
+       horizontal insets are 0px unless a notch is present. */
+    padding-block: var(--space-xl)
+      calc(var(--space-l) + env(safe-area-inset-bottom, 0px));
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
     border-top: 2px solid var(--signature);
   }
   .footer__grid {

@@ -75,6 +75,9 @@ const isActive = (href: string) =>
     background: color-mix(in srgb, var(--paper) 82%, transparent);
     backdrop-filter: blur(10px);
     border-bottom: 1.5px solid var(--ink);
+    /* Clear the status bar/notch under viewport-fit=cover. 0px when absent.
+       MUX-01's drawer max-height subtracts this same inset. */
+    padding-top: env(safe-area-inset-top, 0px);
   }
   .nav__inner {
     min-height: var(--nav-h);
@@ -82,6 +85,8 @@ const isActive = (href: string) =>
     align-items: center;
     justify-content: space-between;
     gap: var(--space-m);
+    /* Keep the brand/toggle clear of a landscape notch (0px when absent). */
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
   }
   .nav__brand {
     display: inline-flex;
