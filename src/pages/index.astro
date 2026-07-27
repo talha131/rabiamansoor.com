@@ -92,11 +92,16 @@ const nonHome = NAV.filter((n) => n.href !== '/');
         {
           marquee.map((book, i) => {
             const Card = book.href ? 'a' : 'figure';
+            // The second copy exists only for the seamless scroll loop — hide
+            // it from assistive tech and keep the duplicate link out of the tab
+            // order (it also drops the clipped duplicate from contrast checks).
+            const isDup = i >= library.length;
             return (
-              <li class="marquee__item">
+              <li class="marquee__item" aria-hidden={isDup ? 'true' : undefined}>
                 <Card
                   class:list={['book', { 'book--link': book.href }]}
                   {...(book.href ? { href: book.href } : {})}
+                  {...(isDup && book.href ? { tabindex: '-1' } : {})}
                 >
                   <Image
                     src={book.img}
@@ -359,15 +364,24 @@ const nonHome = NAV.filter((n) => n.href !== '/');
     padding: 2.4em 0.6em 0.6em;
     display: grid;
     gap: 0.15em;
-    background: linear-gradient(to top, rgba(20, 27, 51, 0.96), transparent);
+    /* Solid dark backing (not a gradient): the title sits over light cover art
+       in this overlay state, and a gradient sets only background-image, so the
+       contrast checker sees through the transparent background-color to the
+       light art (~1:1). A near-opaque solid keeps cream-on-ink >=~12:1. */
+    background: rgba(20, 27, 51, 0.92);
     border-radius: 0 0 3px 3px;
     opacity: 0;
+    /* visibility:hidden (not just opacity) keeps the pre-hover caption out of
+       the a11y tree, so contrast checkers don't flag the hidden overlay title
+       against the cover art behind it. Revealed with the cap on hover/focus. */
+    visibility: hidden;
     transform: translateY(8px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
   }
   .book:hover .book__cap,
   .book:focus-visible .book__cap {
     opacity: 1;
+    visibility: visible;
     transform: translateY(0);
   }
   .book__title {
@@ -409,9 +423,13 @@ const nonHome = NAV.filter((n) => n.href !== '/');
   @media (prefers-reduced-motion: reduce), (hover: none) {
     .book__cap {
       opacity: 1;
+      visibility: visible;
       transform: none;
       position: static;
-      background: none;
+      /* Opaque ink (same colour as the panel, so visually unchanged) gives
+         the caption a solid dark backing the contrast checker can read even
+         for the off-screen items of the scrolling track. */
+      background: var(--ink);
       padding: 0.5em 0 0;
       color: rgba(255, 247, 236, 0.8);
     }
