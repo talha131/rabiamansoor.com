@@ -193,6 +193,14 @@ const isActive = (href: string) =>
     border-top: 1.5px solid var(--ink);
     background: var(--paper);
     padding: var(--space-s) var(--space-m) var(--space-m);
+    /* Keep the whole sticky header within the viewport (landscape trap fix):
+       cap the drawer and let it scroll internally. svh so the address-bar
+       show/hide doesn't change the cap. The env() term is a no-op until
+       MUX-02 adds padding-top: env(safe-area-inset-top) to .nav. */
+    max-height: calc(100svh - var(--nav-h) - env(safe-area-inset-top, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
   .nav__drawer[hidden] {
     display: none;
