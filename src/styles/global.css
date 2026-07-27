@@ -369,6 +369,9 @@ p {
   left: var(--space-m);
   top: -100%;
   z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   background: var(--ink);
   color: var(--cream);
   padding: 0.7em 1.1em;

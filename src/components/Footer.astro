@@ -84,6 +84,11 @@ import { NAV, SCHOLAR_URL, ORCID_URL, DEVELOPER } from '../lib/site';
   }
   .footer__nav a,
   .footer__links a {
+    /* 44px hit area without changing visual density (padding alone on inline
+       links is unreliable for hit-target size). */
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     text-decoration: none;
     color: var(--cream);
     text-underline-offset: 3px;
@@ -119,6 +124,10 @@ import { NAV, SCHOLAR_URL, ORCID_URL, DEVELOPER } from '../lib/site';
   }
   .footer__license a,
   .footer__credit a {
+    /* Grow the clickable box to 44px, not the surrounding text size. */
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     color: var(--cream);
     text-underline-offset: 2px;
   }
