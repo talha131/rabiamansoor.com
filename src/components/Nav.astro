@@ -75,6 +75,9 @@ const isActive = (href: string) =>
     background: color-mix(in srgb, var(--paper) 82%, transparent);
     backdrop-filter: blur(10px);
     border-bottom: 1.5px solid var(--ink);
+    /* Clear the status bar/notch under viewport-fit=cover. 0px when absent.
+       MUX-01's drawer max-height subtracts this same inset. */
+    padding-top: env(safe-area-inset-top, 0px);
   }
   .nav__inner {
     min-height: var(--nav-h);
@@ -82,10 +85,13 @@ const isActive = (href: string) =>
     align-items: center;
     justify-content: space-between;
     gap: var(--space-m);
+    /* Keep the brand/toggle clear of a landscape notch (0px when absent). */
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
   }
   .nav__brand {
     display: inline-flex;
     align-items: center;
+    min-height: 44px;
     gap: 0.55em;
     text-decoration: none;
     font-family: var(--font-display);
@@ -193,6 +199,14 @@ const isActive = (href: string) =>
     border-top: 1.5px solid var(--ink);
     background: var(--paper);
     padding: var(--space-s) var(--space-m) var(--space-m);
+    /* Keep the whole sticky header within the viewport (landscape trap fix):
+       cap the drawer and let it scroll internally. svh so the address-bar
+       show/hide doesn't change the cap. The env() term is a no-op until
+       MUX-02 adds padding-top: env(safe-area-inset-top) to .nav. */
+    max-height: calc(100svh - var(--nav-h) - env(safe-area-inset-top, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
   .nav__drawer[hidden] {
     display: none;
@@ -220,7 +234,7 @@ const isActive = (href: string) =>
     align-self: center;
   }
 
-  @media (min-width: 880px) {
+  @media (min-width: 768px) {
     .nav__links {
       display: block;
     }

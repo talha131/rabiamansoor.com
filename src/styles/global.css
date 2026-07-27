@@ -198,6 +198,9 @@ p {
 .panel {
   position: relative;
   padding-block: var(--section-padding);
+  /* Reserve the notch only when present (0px otherwise), so the .wrap gutter
+     is never doubled. Background still bleeds to the physical edge. */
+  padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
   overflow: clip;
   isolation: isolate;
 }
@@ -366,6 +369,9 @@ p {
   left: var(--space-m);
   top: -100%;
   z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   background: var(--ink);
   color: var(--cream);
   padding: 0.7em 1.1em;
