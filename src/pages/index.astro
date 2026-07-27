@@ -87,7 +87,13 @@ const nonHome = NAV.filter((n) => n.href !== '/');
       </p>
     </div>
 
-    <div class="marquee" data-marquee>
+    <div
+      class="marquee"
+      data-marquee
+      tabindex="0"
+      role="region"
+      aria-label="Foundational geopolitics library — scroll to browse the shelf"
+    >
       <ul class="marquee__track" role="list">
         {
           marquee.map((book, i) => {
@@ -310,25 +316,31 @@ const nonHome = NAV.filter((n) => n.href !== '/');
     transform: translateX(-50%);
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    /* Native horizontal scroll strip: the reader can swipe, trackpad, arrow-key
+       or grab-drag it; the JS controller drifts it and loops seamlessly. The
+       scrollbar is hidden — the drift and grab cursor are the affordance. */
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-behavior: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+  }
+  .marquee::-webkit-scrollbar {
+    display: none;
+  }
+  .marquee:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 4px;
+  }
+  .marquee.is-grabbing {
+    cursor: grabbing;
   }
   .marquee__track {
     display: flex;
     gap: var(--space-m);
     width: max-content;
     padding-inline: var(--space-m);
-    animation: marquee 60s linear infinite;
-  }
-  .marquee:hover .marquee__track,
-  .marquee:focus-within .marquee__track {
-    animation-play-state: paused;
-  }
-  /* Tap-to-pause hook for touch devices (set by script, no hover there). */
-  .marquee.is-paused .marquee__track {
-    animation-play-state: paused;
-  }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
   }
 
   .book {
@@ -399,13 +411,16 @@ const nonHome = NAV.filter((n) => n.href !== '/');
   }
 
   @media (prefers-reduced-motion: reduce) {
+    /* No drift: fall back to the calm wrapped grid — everything visible at once,
+       no overflow, so nothing to scroll and no grab affordance. */
     .marquee__track {
-      animation: none;
       flex-wrap: wrap;
       width: 100%;
       justify-content: center;
     }
     .marquee {
+      overflow-x: visible;
+      cursor: auto;
       -webkit-mask-image: none;
       mask-image: none;
     }
@@ -525,33 +540,187 @@ const nonHome = NAV.filter((n) => n.href !== '/');
 </style>
 
 <script>
-  // Tap-to-pause for the library marquee on touch devices. Desktop keeps its
-  // CSS hover/focus pause (untouched). Progressive: without JS the marquee
-  // scrolls as before and the lone linked cover still works (just moving).
-  function initMarquee() {
-    const marquee = document.querySelector<HTMLElement>('[data-marquee]');
-    if (!marquee) return;
-    // Only where there's no hover-to-pause (touch / coarse pointers).
-    if (!window.matchMedia('(hover: none)').matches) return;
+  // Library shelf: auto-drifting horizontal scroll that the reader can also
+  // grab, swipe, wheel or arrow-key through. The track holds the library twice,
+  // so we loop seamlessly by rebasing scrollLeft across one copy-width. Drift
+  // yields on hover, keyboard focus, or any manual interaction and resumes a
+  // short beat after the reader stops. Progressive: without JS it's a plain
+  // scrollable shelf (no drift, no loop) and every linked cover still works.
+  // Cleanup handles from the previous page-load, so view transitions don't
+  // stack rAF loops or observers onto detached nodes.
+  let priorRaf = 0;
+  let priorObserver: ResizeObserver | undefined;
 
-    let resumeTimer: number | undefined;
-    const setPaused = (paused: boolean) => {
-      marquee.classList.toggle('is-paused', paused);
-      window.clearTimeout(resumeTimer);
-      // Auto-resume so it never stays frozen if the reader moves on.
-      if (paused) {
-        resumeTimer = window.setTimeout(
-          () => marquee.classList.remove('is-paused'),
-          6000
-        );
-      }
+  function initMarquee() {
+    cancelAnimationFrame(priorRaf);
+    priorObserver?.disconnect();
+
+    const marquee = document.querySelector<HTMLElement>('[data-marquee]');
+    const track = marquee?.querySelector<HTMLElement>('.marquee__track');
+    if (!marquee || !track) return;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const PX_PER_SEC = 36; // gentle drift, ~the old marquee pace
+    const RESUME_MS = 2500; // idle beat before drift resumes
+
+    // One copy-width — the track is the library duplicated once. Kept fresh as
+    // lazy covers load and on resize.
+    let copyWidth = track.scrollWidth / 2;
+    priorObserver = new ResizeObserver(() => {
+      copyWidth = track.scrollWidth / 2;
+    });
+    priorObserver.observe(track);
+
+    // Keep scrollLeft within [0, copyWidth); every jump lands on identical
+    // content, so the wrap is invisible. No-op when there's nothing to scroll.
+    const rebase = () => {
+      if (reduce.matches || copyWidth <= 0) return;
+      if (marquee.scrollWidth <= marquee.clientWidth) return;
+      if (marquee.scrollLeft >= copyWidth) marquee.scrollLeft -= copyWidth;
+      else if (marquee.scrollLeft <= 0) marquee.scrollLeft += copyWidth;
     };
 
-    // pointerdown (never preventDefault) freezes on touch-down so the reader
-    // can aim at the now-static linked cover; the link's own tap still fires.
-    marquee.addEventListener('pointerdown', () => {
-      setPaused(!marquee.classList.contains('is-paused'));
+    // Drift is paused whenever any of these hold.
+    let hovering = false;
+    let focusing = false;
+    let dragging = false;
+    let idleHold = false;
+    let paused = reduce.matches;
+    let last = 0;
+    // Float source-of-truth for the drift. scrollLeft is integer-quantised, so
+    // accumulating a sub-pixel step straight onto it rounds up every frame and
+    // races ~2x too fast; we advance this float and write the rounded value.
+    let pos = 0;
+
+    const sync = () => {
+      const next = reduce.matches || hovering || focusing || dragging || idleHold;
+      // On resume, re-sync from wherever the reader (or a wrap) left scrollLeft.
+      if (paused && !next) last = 0;
+      paused = next;
+    };
+
+    let idleTimer: number | undefined;
+    const holdIdle = () => {
+      idleHold = true;
+      sync();
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => {
+        idleHold = false;
+        sync();
+      }, RESUME_MS);
+    };
+
+    const tick = (now: number) => {
+      if (!last) {
+        last = now;
+        pos = marquee.scrollLeft; // adopt the current spot (resume / first run)
+      }
+      const dt = (now - last) / 1000;
+      last = now;
+      if (!paused && copyWidth > 0) {
+        pos += PX_PER_SEC * dt;
+        if (pos >= copyWidth) pos -= copyWidth;
+        else if (pos < 0) pos += copyWidth;
+        marquee.scrollLeft = pos;
+      }
+      priorRaf = requestAnimationFrame(tick);
+    };
+    priorRaf = requestAnimationFrame(tick);
+
+    // Hover (fine pointers) and keyboard focus pause to let the reader look.
+    marquee.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse') {
+        hovering = true;
+        sync();
+      }
     });
+    marquee.addEventListener('pointerleave', (e) => {
+      if (e.pointerType === 'mouse') {
+        hovering = false;
+        sync();
+      }
+    });
+    marquee.addEventListener('focusin', () => {
+      focusing = true;
+      sync();
+    });
+    marquee.addEventListener('focusout', () => {
+      focusing = false;
+      sync();
+    });
+
+    // Manual scroll inputs (touch swipe, trackpad, arrow keys) hold the drift.
+    marquee.addEventListener('wheel', () => holdIdle(), { passive: true });
+    marquee.addEventListener('keydown', (e) => {
+      if (e.key.startsWith('Arrow') || e.key === 'Home' || e.key === 'End') {
+        holdIdle();
+      }
+    });
+    // Rebase on user momentum too, so a hard swipe never dead-ends at an edge.
+    marquee.addEventListener('scroll', rebase, { passive: true });
+
+    // Mouse grab-to-drag (touch/pen use the platform's native scrolling). We
+    // move incrementally so a mid-drag rebase can't yank the position, and only
+    // engage past a small threshold so a click on a linked cover still fires.
+    let downX = 0;
+    let lastX = 0;
+    let moved = false;
+    let justDragged = false;
+
+    marquee.addEventListener('pointerdown', (e) => {
+      justDragged = false;
+      holdIdle(); // pause for touch swipes too
+      if (e.pointerType !== 'mouse') return;
+      downX = lastX = e.clientX;
+      moved = false;
+
+      const onMove = (ev: PointerEvent) => {
+        if (!moved && Math.abs(ev.clientX - downX) < 5) return;
+        if (!moved) {
+          moved = true;
+          dragging = true;
+          marquee.classList.add('is-grabbing');
+          try {
+            marquee.setPointerCapture(e.pointerId);
+          } catch {
+            /* pointer already released — dragging still works without capture */
+          }
+          sync();
+        }
+        marquee.scrollLeft -= ev.clientX - lastX;
+        lastX = ev.clientX;
+        rebase();
+      };
+      const onUp = () => {
+        marquee.removeEventListener('pointermove', onMove);
+        marquee.removeEventListener('pointerup', onUp);
+        marquee.removeEventListener('pointercancel', onUp);
+        if (moved) {
+          justDragged = true; // swallow the click this drag would fire
+          dragging = false;
+          marquee.classList.remove('is-grabbing');
+          holdIdle();
+        }
+      };
+      marquee.addEventListener('pointermove', onMove);
+      marquee.addEventListener('pointerup', onUp);
+      marquee.addEventListener('pointercancel', onUp);
+    });
+
+    // A drag ends in a click — suppress just that one so it never navigates.
+    marquee.addEventListener(
+      'click',
+      (e) => {
+        if (justDragged) {
+          e.preventDefault();
+          e.stopPropagation();
+          justDragged = false;
+        }
+      },
+      true
+    );
+
+    reduce.addEventListener('change', sync);
   }
   document.addEventListener('astro:page-load', initMarquee);
 </script>
