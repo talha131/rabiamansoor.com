@@ -5,6 +5,14 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# @astrojs/sitemap emits `sitemap-index.xml`, but people and tools routinely
+# probe the conventional `/sitemap.xml`. Redirect it to the real index so that
+# guess resolves instead of 404ing.
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap-index.xml"
+  status = 301
+
 # Long-cache the fingerprinted asset bundle (JS/CSS/images from /_astro/).
 [[headers]]
   for = "/_astro/*"
